@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {    
-    return redirect()->route('login');
+Route::get('/', function () {
+   // return view('welcome');
+     return redirect()->route('login');
 });
 
 Auth::routes();
@@ -36,3 +37,16 @@ Route::delete('/admin/roles/{id}', [App\Http\Controllers\RoleController::class, 
 //el metodo que da permisos
 Route::get('/admin/roles/{id}/permisos', [App\Http\Controllers\RoleController::class, 'permisos'])->name('admin.roles.permisos')->middleware('auth','can:admin.roles.permisos');//el que da permisos che
 Route::post('/admin/roles/{id}', [App\Http\Controllers\RoleController::class, 'update_permisos'])->name('admin.roles.update_permisos')->middleware('auth','can:admin.roles.update_permisos');//el que da permisos che
+
+
+
+//rutas que van a ser de grupos del sitema CreateReadUpdateDelete
+//Trabajando con Modals
+Route::get('/admin/grupos', [App\Http\Controllers\GrupoController::class, 'index'])->name('admin.grupos.index')->middleware('auth','can:admin.grupos.index');
+Route::post('/admin/grupos/create', [App\Http\Controllers\GrupoController::class, 'store'])->name('admin.grupos.create')->middleware('auth','can:admin.grupos.create');//Create
+Route::put('/admin/grupos/{id}', [App\Http\Controllers\GrupoController::class, 'update'])->name('admin.grupos.update')->middleware('auth','can:admin.grupos.update');//Update
+Route::delete('/admin/grupos/{id}', [App\Http\Controllers\GrupoController::class, 'destroy'])->name('admin.grupos.destroy')->middleware('auth','can:admin.grupos.destroy');//Delete
+
+
+
+

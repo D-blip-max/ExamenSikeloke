@@ -4,62 +4,81 @@ namespace App\Http\Controllers;
 
 use App\Models\Grupo;
 use Illuminate\Http\Request;
+use App\Models\Bitacora;
+use Illuminate\Support\Facades\Validator;
 
 class GrupoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $grupos = Grupo::all();
+        return view('admin.grupos.index', compact('grupos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_create' => 'required|max:255|unique:grupos,nombre',
+        ]);
+
+        $grupo = new Grupo();
+        $grupo->nombre = $request->nombre_create;
+        $grupo->save();
+
+        Bitacora::create([
+            'user_id' => auth()->user()->id,
+            'accion' => 'Se creó un grupo: ' . $grupo->nombre,
+            'hora' => now('America/La_Paz'),
+        ]);
+
+        return redirect()->route('admin.grupos.index')
+            ->with('mensaje', 'El grupo se ha creado correctamente.')
+            ->with('icono', 'success');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Grupo $grupo)
+    public function update(Request $request, $id)
     {
-        //
+        $validate = Validator::make($request->all(), [
+            'nombre' => 'required|max:255|unique:grupos,nombre,' . $id,
+        ]);
+
+        if ($validate->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validate)
+                ->withInput()
+                ->with('modal_id', $id);
+        }
+
+        $grupo = Grupo::find($id);
+        $grupo->nombre = $request->nombre;
+        $grupo->save();
+
+        Bitacora::create([
+            'user_id' => auth()->user()->id,
+            'accion' => 'Se editó un grupo: ' . $grupo->nombre,
+            'hora' => now('America/La_Paz'),
+        ]);
+
+        return redirect()->route('admin.grupos.index')
+            ->with('mensaje', 'El grupo se ha actualizado correctamente')
+            ->with('icono', 'success');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Grupo $grupo)
+    public function destroy($id)
     {
-        //
-    }
+        $grupo = Grupo::find($id);
+        $nombre = $grupo->nombre;
+        $grupo->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Grupo $grupo)
-    {
-        //
-    }
+        Bitacora::create([
+            'user_id' => auth()->user()->id,
+            'accion' => 'Se eliminó un grupo: ' . $nombre,
+            'hora' => now('America/La_Paz'),
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Grupo $grupo)
-    {
-        //
+        return redirect()->route('admin.grupos.index')
+            ->with('mensaje', 'El grupo se ha eliminado correctamente')
+            ->with('icono', 'success');
     }
 }

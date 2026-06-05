@@ -27,8 +27,13 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.gestiones.edit'])->syncRoles($admin);
         Permission::create(['name' => 'admin.gestiones.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.gestiones.destroy'])->syncRoles($admin); 
+
+
+
         // --- PERMISOS PARA BITACORAS CRUD---
         Permission::create(['name' => 'admin.bitacora.index'])->syncRoles($admin);
+
+
         // --- PERMISOS PARA ROLES CRUD---
         Permission::create(['name' => 'admin.roles.index'])->syncRoles($admin);
         Permission::create(['name' => 'admin.roles.create'])->syncRoles($admin);
@@ -38,5 +43,13 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.roles.destroy'])->syncRoles($admin);
         Permission::create(['name' => 'admin.roles.permisos'])->syncRoles($admin);
         Permission::create(['name' => 'admin.roles.update_permisos'])->syncRoles($admin);
+
+
+         // --- PERMISOS PARA GRUPOS CRUD---
+        Permission::create(['name' => 'admin.grupos.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.grupos.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.grupos.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.grupos.destroy'])->syncRoles($admin);
+
     }
 }

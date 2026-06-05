@@ -303,24 +303,16 @@ return [
         // PAQUETE 2: Gestión de Personal y Usuarios
         // =============================================
         [
-            
-            'text'    => 'Paquete 2: Gestión de Personal y Usuarios',
+
+            'text'    => 'Paquete 1: Seguridad y Gestión de Accesos',
             'icon'    => 'fas fa-fw fa-users',
             'classes' => 'bg-dark text-white',
             'submenu' => [
                 [
                     'can'     => 'admin.bitacora.index',
-                    'text'    => 'CU6 · Visualizar Bitácora',
+                    'text'    => 'CU5 · Visualizar Bitácora',
                     'url'     => 'admin/bitacora',
                     'icon'    => 'fas fa-fw fa-book',
-                    'classes' => 'bg-blue text-white',
-                ],
-
-                [
-                    'can'     => 'admin.roles.index',
-                    'text'    => 'CU22 · Gestionar Gestiones',
-                    'url'     => 'admin/gestiones',
-                    'icon'    => 'fas fa-fw fa-calendar-alt',
                     'classes' => 'bg-blue text-white',
                 ],
                 [
@@ -328,6 +320,31 @@ return [
                     'text'    => 'CU4 · Gestionar Roles',
                     'url'     => 'admin/roles',
                     'icon'    => 'fas fa-fw fa-user-shield',
+                    'classes' => 'bg-blue text-white',
+                ],
+            ],
+        ],
+        // =============================================
+        // PAQUETE 2: Gestión de Administracion
+        // =============================================
+        [
+
+            'text'    => 'Paquete 2: Gestión de Administración',
+            'icon'    => 'fas fa-fw fa-cogs',
+            'classes' => 'bg-dark text-white',
+            'submenu' => [
+                [
+                    'can'     => 'admin.grupos.index',
+                    'text'    => 'CU21 · Gestionar Grupos',
+                    'url'     => 'admin/grupos',
+                    'icon'    => 'fas fa-fw fa-users-cog',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
+                    'can'     => 'admin.gestiones.index',
+                    'text'    => 'CU22 · Gestionar Gestiones',
+                    'url'     => 'admin/gestiones',
+                    'icon'    => 'fas fa-fw fa-calendar-alt',
                     'classes' => 'bg-blue text-white',
                 ],
             ],
