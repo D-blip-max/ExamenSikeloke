@@ -303,11 +303,13 @@ return [
         // PAQUETE 2: Gestión de Personal y Usuarios
         // =============================================
         [
+            
             'text'    => 'Paquete 2: Gestión de Personal y Usuarios',
             'icon'    => 'fas fa-fw fa-users',
             'classes' => 'bg-dark text-white',
             'submenu' => [
                 [
+                    'can'     => 'admin.bitacora.index',
                     'text'    => 'CU6 · Visualizar Bitácora',
                     'url'     => 'admin/bitacora',
                     'icon'    => 'fas fa-fw fa-book',
@@ -315,9 +317,17 @@ return [
                 ],
 
                 [
-                    'text'    => 'CU23 · Gestionar Gestiones',
+                    'can'     => 'admin.roles.index',
+                    'text'    => 'CU22 · Gestionar Gestiones',
                     'url'     => 'admin/gestiones',
                     'icon'    => 'fas fa-fw fa-calendar-alt',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
+                    'can'     => 'admin.roles.index',
+                    'text'    => 'CU4 · Gestionar Roles',
+                    'url'     => 'admin/roles',
+                    'icon'    => 'fas fa-fw fa-user-shield',
                     'classes' => 'bg-blue text-white',
                 ],
             ],

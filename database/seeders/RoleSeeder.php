@@ -1,0 +1,42 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+class RoleSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        Role::create(['name' => 'Administrador']);
+        Role::create(['name' => 'Docente']);
+        Role::create(['name' => 'Estudiante']);
+        Role::create(['name' =>'Coordinador Academico']);
+        $admin = Role::findByName('Administrador');
+
+
+           // --- PERMISOS PARA GESTIONES CRUD---
+        Permission::create(['name' => 'admin.gestiones.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.gestiones.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.gestiones.store'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.gestiones.edit'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.gestiones.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.gestiones.destroy'])->syncRoles($admin); 
+        // --- PERMISOS PARA BITACORAS CRUD---
+        Permission::create(['name' => 'admin.bitacora.index'])->syncRoles($admin);
+        // --- PERMISOS PARA ROLES CRUD---
+        Permission::create(['name' => 'admin.roles.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.roles.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.roles.store'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.roles.edit'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.roles.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.roles.destroy'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.roles.permisos'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.roles.update_permisos'])->syncRoles($admin);
+    }
+}
