@@ -348,6 +348,13 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.horarios.index',
+                    'text'    => 'CU14 · Gestionar Horarios',
+                    'url'     => 'admin/horarios',
+                    'icon'    => 'fas fa-fw fa-clock',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.gestiones.index',
                     'text'    => 'CU22 · Gestionar Gestiones',
                     'url'     => 'admin/gestiones',

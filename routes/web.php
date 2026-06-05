@@ -57,3 +57,18 @@ Route::put('/admin/aulas/{id}', [App\Http\Controllers\AulaController::class, 'up
 Route::delete('/admin/aulas/{id}', [App\Http\Controllers\AulaController::class, 'destroy'])->name('admin.aulas.destroy')->middleware('auth','can:admin.aulas.destroy');//Delete
 
 
+
+//rutas que van a ser de horarios del sitema CreateReadUpdateDelete
+//Trabajando con Modals
+Route::get('/admin/horarios', [App\Http\Controllers\HorarioController::class, 'index'])->name('admin.horarios.index')->middleware('auth','can:admin.horarios.index');
+Route::post('/admin/horarios/create', [App\Http\Controllers\HorarioController::class, 'store'])->name('admin.horarios.create')->middleware('auth','can:admin.horarios.create');//Create
+Route::put('/admin/horarios/{id}', [App\Http\Controllers\HorarioController::class, 'update'])->name('admin.horarios.update')->middleware('auth','can:admin.horarios.update');//Update
+Route::delete('/admin/horarios/{id}', [App\Http\Controllers\HorarioController::class, 'destroy'])->name('admin.horarios.destroy')->middleware('auth','can:admin.horarios.destroy');//Delete
+
+
+
+
+
+
+
+

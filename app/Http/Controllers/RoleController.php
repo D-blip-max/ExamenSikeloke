@@ -56,6 +56,16 @@ class RoleController extends Controller
             if (stripos($permiso->name, 'roles') !== false) {
                 return 'Roles';
             }
+            if (stripos($permiso->name, 'grupos') !== false) {
+                return 'Grupos';
+            }
+            if (stripos($permiso->name, 'aulas') !== false) {
+                return 'Aulas';
+            }
+            if (stripos($permiso->name, 'horarios') !== false) {
+                return 'Horarios';
+            }
+            return 'Otros';
         });
 
         return view('admin.roles.permisos', compact('rol', 'permisos'));

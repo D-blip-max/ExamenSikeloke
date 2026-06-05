@@ -58,5 +58,14 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.aulas.create'])->syncRoles($admin);
         Permission::create(['name' => 'admin.aulas.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.aulas.destroy'])->syncRoles($admin);
+
+
+        // --- PERMISOS PARA HORARIOS CRUD---
+        Permission::create(['name' => 'admin.horarios.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.horarios.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.horarios.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.horarios.destroy'])->syncRoles($admin);
+
+
     }
 }
