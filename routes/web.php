@@ -48,6 +48,14 @@ Route::put('/admin/grupos/{id}', [App\Http\Controllers\GrupoController::class, '
 Route::delete('/admin/grupos/{id}', [App\Http\Controllers\GrupoController::class, 'destroy'])->name('admin.grupos.destroy')->middleware('auth','can:admin.grupos.destroy');//Delete
 
 
+//rutas que van a ser de carreras del sitema CreateReadUpdateDelete
+//Trabajando con Modals
+Route::get('/admin/carreras', [App\Http\Controllers\CarreraController::class, 'index'])->name('admin.carreras.index')->middleware('auth','can:admin.carreras.index');
+Route::post('/admin/carreras/create', [App\Http\Controllers\CarreraController::class, 'store'])->name('admin.carreras.create')->middleware('auth','can:admin.carreras.create');//Create
+Route::put('/admin/carreras/{id}', [App\Http\Controllers\CarreraController::class, 'update'])->name('admin.carreras.update')->middleware('auth','can:admin.carreras.update');//Update
+Route::delete('/admin/carreras/{id}', [App\Http\Controllers\CarreraController::class, 'destroy'])->name('admin.carreras.destroy')->middleware('auth','can:admin.carreras.destroy');//Delete
+
+
 
 //rutas que van a ser de aulas del sitema CreateReadUpdateDelete
 //Trabajando con Modals

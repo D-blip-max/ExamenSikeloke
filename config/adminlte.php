@@ -341,6 +341,13 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.carreras.index',
+                    'text'    => 'CU11 · Gestionar Carreras',
+                    'url'     => 'admin/carreras',
+                    'icon'    => 'fas fa-fw fa-graduation-cap',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.aulas.index',
                     'text'    => 'CU13 · Gestionar Aulas',
                     'url'     => 'admin/aulas',
