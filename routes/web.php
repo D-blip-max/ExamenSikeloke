@@ -49,4 +49,11 @@ Route::delete('/admin/grupos/{id}', [App\Http\Controllers\GrupoController::class
 
 
 
+//rutas que van a ser de aulas del sitema CreateReadUpdateDelete
+//Trabajando con Modals
+Route::get('/admin/aulas', [App\Http\Controllers\AulaController::class, 'index'])->name('admin.aulas.index')->middleware('auth','can:admin.aulas.index');
+Route::post('/admin/aulas/create', [App\Http\Controllers\AulaController::class, 'store'])->name('admin.aulas.create')->middleware('auth','can:admin.aulas.create');//Create
+Route::put('/admin/aulas/{id}', [App\Http\Controllers\AulaController::class, 'update'])->name('admin.aulas.update')->middleware('auth','can:admin.aulas.update');//Update
+Route::delete('/admin/aulas/{id}', [App\Http\Controllers\AulaController::class, 'destroy'])->name('admin.aulas.destroy')->middleware('auth','can:admin.aulas.destroy');//Delete
+
 

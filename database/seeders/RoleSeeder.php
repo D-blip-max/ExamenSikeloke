@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+
 class RoleSeeder extends Seeder
 {
     /**
@@ -16,17 +17,17 @@ class RoleSeeder extends Seeder
         Role::create(['name' => 'Administrador']);
         Role::create(['name' => 'Docente']);
         Role::create(['name' => 'Estudiante']);
-        Role::create(['name' =>'Coordinador Academico']);
+        Role::create(['name' => 'Coordinador Academico']);
         $admin = Role::findByName('Administrador');
 
 
-           // --- PERMISOS PARA GESTIONES CRUD---
+        // --- PERMISOS PARA GESTIONES CRUD---
         Permission::create(['name' => 'admin.gestiones.index'])->syncRoles($admin);
         Permission::create(['name' => 'admin.gestiones.create'])->syncRoles($admin);
         Permission::create(['name' => 'admin.gestiones.store'])->syncRoles($admin);
         Permission::create(['name' => 'admin.gestiones.edit'])->syncRoles($admin);
         Permission::create(['name' => 'admin.gestiones.update'])->syncRoles($admin);
-        Permission::create(['name' => 'admin.gestiones.destroy'])->syncRoles($admin); 
+        Permission::create(['name' => 'admin.gestiones.destroy'])->syncRoles($admin);
 
 
 
@@ -45,11 +46,17 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.roles.update_permisos'])->syncRoles($admin);
 
 
-         // --- PERMISOS PARA GRUPOS CRUD---
+        // --- PERMISOS PARA GRUPOS CRUD---
         Permission::create(['name' => 'admin.grupos.index'])->syncRoles($admin);
         Permission::create(['name' => 'admin.grupos.create'])->syncRoles($admin);
         Permission::create(['name' => 'admin.grupos.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.grupos.destroy'])->syncRoles($admin);
 
+
+        // --- PERMISOS PARA AULAS CRUD---
+        Permission::create(['name' => 'admin.aulas.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.aulas.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.aulas.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.aulas.destroy'])->syncRoles($admin);
     }
 }

@@ -341,6 +341,13 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.aulas.index',
+                    'text'    => 'CU13 · Gestionar Aulas',
+                    'url'     => 'admin/aulas',
+                    'icon'    => 'fas fa-fw fa-school',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.gestiones.index',
                     'text'    => 'CU22 · Gestionar Gestiones',
                     'url'     => 'admin/gestiones',
