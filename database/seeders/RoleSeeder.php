@@ -93,5 +93,11 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.materias.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.materias.destroy'])->syncRoles($admin);
 
+        // --- PERMISOS PARA CONFIG_PORCENTAJES CRUD---
+        Permission::create(['name' => 'admin.config_porcentajes.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.config_porcentajes.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.config_porcentajes.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.config_porcentajes.destroy'])->syncRoles($admin);
+
     }
 }

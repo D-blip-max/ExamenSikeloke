@@ -362,6 +362,13 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.config_porcentajes.index',
+                    'text'    => 'CU17 · Configurar Porcentajes de Evaluación',
+                    'url'     => 'admin/config-porcentajes',
+                    'icon'    => 'fas fa-fw fa-percentage',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.gestiones.index',
                     'text'    => 'CU22 · Gestionar Gestiones',
                     'url'     => 'admin/gestiones',

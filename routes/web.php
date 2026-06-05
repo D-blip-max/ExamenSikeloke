@@ -93,8 +93,12 @@ Route::put('/admin/dias/{id}', [App\Http\Controllers\DiaController::class, 'upda
 Route::delete('/admin/dias/{id}', [App\Http\Controllers\DiaController::class, 'destroy'])->name('admin.dias.destroy')->middleware('auth','can:admin.dias.destroy');//Delete
 
 
-//rutas que van a ser de materias del sistema CreateReadUpdateDelete
+//rutas que van a ser de config_porcentajes del sistema CreateReadUpdateDelete
 //Trabajando con Modals
+Route::get('/admin/config-porcentajes', [App\Http\Controllers\ConfigPorcentajeController::class, 'index'])->name('admin.config_porcentajes.index')->middleware('auth','can:admin.config_porcentajes.index');
+Route::post('/admin/config-porcentajes/create', [App\Http\Controllers\ConfigPorcentajeController::class, 'store'])->name('admin.config_porcentajes.create')->middleware('auth','can:admin.config_porcentajes.create');//Create
+Route::put('/admin/config-porcentajes/{id}', [App\Http\Controllers\ConfigPorcentajeController::class, 'update'])->name('admin.config_porcentajes.update')->middleware('auth','can:admin.config_porcentajes.update');//Update
+Route::delete('/admin/config-porcentajes/{id}', [App\Http\Controllers\ConfigPorcentajeController::class, 'destroy'])->name('admin.config_porcentajes.destroy')->middleware('auth','can:admin.config_porcentajes.destroy');//Delete
 Route::get('/admin/materias', [App\Http\Controllers\MateriaController::class, 'index'])->name('admin.materias.index')->middleware('auth','can:admin.materias.index');
 Route::post('/admin/materias/create', [App\Http\Controllers\MateriaController::class, 'store'])->name('admin.materias.create')->middleware('auth','can:admin.materias.create');//Create
 Route::put('/admin/materias/{id}', [App\Http\Controllers\MateriaController::class, 'update'])->name('admin.materias.update')->middleware('auth','can:admin.materias.update');//Update
