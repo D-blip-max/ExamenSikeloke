@@ -93,6 +93,14 @@ Route::put('/admin/dias/{id}', [App\Http\Controllers\DiaController::class, 'upda
 Route::delete('/admin/dias/{id}', [App\Http\Controllers\DiaController::class, 'destroy'])->name('admin.dias.destroy')->middleware('auth','can:admin.dias.destroy');//Delete
 
 
+//rutas que van a ser de materias del sistema CreateReadUpdateDelete
+//Trabajando con Modals
+Route::get('/admin/materias', [App\Http\Controllers\MateriaController::class, 'index'])->name('admin.materias.index')->middleware('auth','can:admin.materias.index');
+Route::post('/admin/materias/create', [App\Http\Controllers\MateriaController::class, 'store'])->name('admin.materias.create')->middleware('auth','can:admin.materias.create');//Create
+Route::put('/admin/materias/{id}', [App\Http\Controllers\MateriaController::class, 'update'])->name('admin.materias.update')->middleware('auth','can:admin.materias.update');//Update
+Route::delete('/admin/materias/{id}', [App\Http\Controllers\MateriaController::class, 'destroy'])->name('admin.materias.destroy')->middleware('auth','can:admin.materias.destroy');//Delete
+
+
 
 
 

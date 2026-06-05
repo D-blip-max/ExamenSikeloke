@@ -382,6 +382,13 @@ return [
                     'icon'    => 'fas fa-fw fa-calendar-day',
                     'classes' => 'bg-blue text-white',
                 ],
+                [
+                    'can'     => 'admin.materias.index',
+                    'text'    => 'CU25 · Gestionar Materias',
+                    'url'     => 'admin/materias',
+                    'icon'    => 'fas fa-fw fa-book-open',
+                    'classes' => 'bg-blue text-white',
+                ],
             ],
         ],
 

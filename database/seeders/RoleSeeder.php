@@ -87,7 +87,11 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.dias.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.dias.destroy'])->syncRoles($admin);
 
-
+        // --- PERMISOS PARA MATERIAS CRUD---
+        Permission::create(['name' => 'admin.materias.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.materias.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.materias.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.materias.destroy'])->syncRoles($admin);
 
     }
 }
