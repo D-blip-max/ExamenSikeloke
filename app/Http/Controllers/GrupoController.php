@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Grupo;
+use App\Models\Turno;
 use Illuminate\Http\Request;
 use App\Models\Bitacora;
 use Illuminate\Support\Facades\Validator;
@@ -12,17 +13,24 @@ class GrupoController extends Controller
     public function index()
     {
         $grupos = Grupo::all();
-        return view('admin.grupos.index', compact('grupos'));
+        $turnos = Turno::all();
+        return view('admin.grupos.index', compact('grupos', 'turnos'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nombre_create' => 'required|max:255|unique:grupos,nombre',
+            'cupo_maximo_create' => 'required|integer|min:1',
+            'inscritos_create' => 'required|integer|min:0|max:' . $request->input('cupo_maximo_create'),
+            'turno_id_create' => 'required|exists:turnos,id',
         ]);
 
         $grupo = new Grupo();
         $grupo->nombre = $request->nombre_create;
+        $grupo->cupo_maximo = $request->cupo_maximo_create;
+        $grupo->inscritos = $request->inscritos_create;
+        $grupo->turno_id = $request->turno_id_create;
         $grupo->save();
 
         Bitacora::create([
@@ -40,6 +48,9 @@ class GrupoController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'nombre' => 'required|max:255|unique:grupos,nombre,' . $id,
+            'cupo_maximo' => 'required|integer|min:1',
+            'inscritos' => 'required|integer|min:0|max:' . $request->input('cupo_maximo'),
+            'turno_id' => 'required|exists:turnos,id',
         ]);
 
         if ($validate->fails()) {
@@ -52,6 +63,9 @@ class GrupoController extends Controller
 
         $grupo = Grupo::find($id);
         $grupo->nombre = $request->nombre;
+        $grupo->cupo_maximo = $request->cupo_maximo;
+        $grupo->inscritos = $request->inscritos;
+        $grupo->turno_id = $request->turno_id;
         $grupo->save();
 
         Bitacora::create([

@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grupos', function (Blueprint $table) {
+        Schema::create('turnos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre')->unique();
-            $table->unsignedInteger('cupo_maximo');
-            $table->unsignedInteger('inscritos')->default(0);
-            $table->unsignedBigInteger('turno_id');
-            $table->foreign('turno_id')->references('id')->on('turnos')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('grupos');
+        Schema::dropIfExists('turnos');
     }
 };

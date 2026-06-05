@@ -361,6 +361,13 @@ return [
                     'icon'    => 'fas fa-fw fa-calendar-alt',
                     'classes' => 'bg-blue text-white',
                 ],
+                [
+                    'can'     => 'admin.turnos.index',
+                    'text'    => 'CU23 · Gestionar Turnos',
+                    'url'     => 'admin/turnos',
+                    'icon'    => 'fas fa-fw fa-clock',
+                    'classes' => 'bg-blue text-white',
+                ],
             ],
         ],
 

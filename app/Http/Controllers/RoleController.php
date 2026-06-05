@@ -65,6 +65,9 @@ class RoleController extends Controller
             if (stripos($permiso->name, 'horarios') !== false) {
                 return 'Horarios';
             }
+            if (stripos($permiso->name, 'turnos') !== false) {
+                return 'Turnos';
+            }
             return 'Otros';
         });
 

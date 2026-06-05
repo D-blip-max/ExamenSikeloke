@@ -8,5 +8,10 @@ class Grupo extends Model
 {
     //
     protected $table = 'grupos';
-    protected $fillable = ['nombre'];
+    protected $fillable = ['nombre', 'cupo_maximo', 'inscritos', 'turno_id'];
+
+    public function turno()
+    {
+        return $this->belongsTo(Turno::class, 'turno_id');
+    }
 }

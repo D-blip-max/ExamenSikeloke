@@ -66,6 +66,16 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.horarios.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.horarios.destroy'])->syncRoles($admin);
 
+        // --- PERMISOS PARA TURNOS CRUD---
+        Permission::create(['name' => 'admin.turnos.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.turnos.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.turnos.store'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.turnos.edit'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.turnos.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.turnos.destroy'])->syncRoles($admin);
+
+        
+
 
     }
 }

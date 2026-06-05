@@ -53,6 +53,64 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="">Cupo máximo</label><b> (*)</b>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-users"></i></span>
+                                                            </div>
+                                                            <input type="number" class="form-control" name="cupo_maximo_create"
+                                                                value="{{ old('cupo_maximo_create') }}"
+                                                                min="1" placeholder="Número máximo" required>
+                                                        </div>
+                                                        @error('cupo_maximo_create')
+                                                            <small style="color: red;">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="">Inscritos</label><b> (*)</b>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-user-check"></i></span>
+                                                            </div>
+                                                            <input type="number" class="form-control" name="inscritos_create"
+                                                                value="{{ old('inscritos_create', 0) }}"
+                                                                min="0" placeholder="Cantidad actual" required>
+                                                        </div>
+                                                        @error('inscritos_create')
+                                                            <small style="color: red;">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="">Turno</label><b> (*)</b>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i
+                                                                        class="fas fa-clock"></i></span>
+                                                            </div>
+                                                            <select class="form-control" name="turno_id_create" required>
+                                                                <option value="">Seleccione un turno</option>
+                                                                @foreach($turnos as $turno)
+                                                                    <option value="{{ $turno->id }}" {{ old('turno_id_create') == $turno->id ? 'selected' : '' }}>{{ $turno->nombre }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        @error('turno_id_create')
+                                                            <small style="color: red;">{{ $message }}</small>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <div class="row">
                                                 <hr>
@@ -78,6 +136,9 @@
                             <tr>
                                 <th>Nro</th>
                                 <th>Nombre</th>
+                                <th>Cupo máximo</th>
+                                <th>Inscritos</th>
+                                <th>Turno</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -86,17 +147,18 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $grupo->nombre }}</td>
+                                    <td>{{ $grupo->cupo_maximo }}</td>
+                                    <td>{{ $grupo->inscritos }}</td>
+                                    <td>{{ $grupo->turno->nombre }}</td>
                                     <td>
-
                                         <div class="row d-flex justify-content-center">
                                             <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
                                                 data-target="#ModalUpdate{{ $grupo->id }}">
                                                 <i class="fas fa-pencil-alt"></i> Editar
                                             </button>
 
-
                                             <form action="{{ url('/admin/grupos/' . $grupo->id) }}" method="post"
-                                                id="miFormulario{{ $grupo->id }}">
+                                                id="miFormulario{{ $grupo->id }}" class="ml-2">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm"
@@ -104,10 +166,7 @@
                                                     <i class="fas fa-trash-alt"></i> Eliminar
                                                 </button>
                                             </form>
-
-
                                         </div>
-
 
                                         <script>
                                             function preguntar{{ $grupo->id }}(event) {
@@ -123,16 +182,12 @@
                                                     denyButtonText: 'Cancelar',
                                                 }).then((result) => {
                                                     if (result.isConfirmed) {
-                                                        // JavaScript puro para enviar el formulario
                                                         document.getElementById('miFormulario{{ $grupo->id }}').submit();
                                                     }
                                                 });
                                             }
                                         </script>
 
-
-
-                                        <!-- Modal de Edicion -->
                                         <div class="modal fade" id="ModalUpdate{{ $grupo->id }}" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -152,9 +207,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
-                                                                        <label for="">Nombre del grupo</label><b>
-                                                                            (*)
-                                                                        </b>
+                                                                        <label for="">Nombre del grupo</label><b> (*)</b>
                                                                         <div class="input-group mb-3">
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-text"><i
@@ -166,31 +219,84 @@
                                                                                 placeholder="Escriba aquí..." required>
                                                                         </div>
                                                                         @error('nombre')
-                                                                            <small
-                                                                                style="color: red;">{{ $message }}</small>
+                                                                            <small style="color: red;">{{ $message }}</small>
                                                                         @enderror
                                                                     </div>
                                                                 </div>
                                                             </div>
-
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label for="">Cupo máximo</label><b> (*)</b>
+                                                                        <div class="input-group mb-3">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fas fa-users"></i></span>
+                                                                            </div>
+                                                                            <input type="number" class="form-control"
+                                                                                name="cupo_maximo"
+                                                                                value="{{ old('cupo_maximo', $grupo->cupo_maximo) }}"
+                                                                                min="1" placeholder="Número máximo" required>
+                                                                        </div>
+                                                                        @error('cupo_maximo')
+                                                                            <small style="color: red;">{{ $message }}</small>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label for="">Inscritos</label><b> (*)</b>
+                                                                        <div class="input-group mb-3">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fas fa-user-check"></i></span>
+                                                                            </div>
+                                                                            <input type="number" class="form-control"
+                                                                                name="inscritos"
+                                                                                value="{{ old('inscritos', $grupo->inscritos) }}"
+                                                                                min="0" placeholder="Cantidad actual" required>
+                                                                        </div>
+                                                                        @error('inscritos')
+                                                                            <small style="color: red;">{{ $message }}</small>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="">Turno</label><b> (*)</b>
+                                                                        <div class="input-group mb-3">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fas fa-clock"></i></span>
+                                                                            </div>
+                                                                            <select class="form-control" name="turno_id" required>
+                                                                                <option value="">Seleccione un turno</option>
+                                                                                @foreach($turnos as $turno)
+                                                                                    <option value="{{ $turno->id }}" {{ old('turno_id', $grupo->turno_id) == $turno->id ? 'selected' : '' }}>{{ $turno->nombre }}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                        @error('turno_id')
+                                                                            <small style="color: red;">{{ $message }}</small>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div class="row">
                                                                 <hr>
                                                                 <div class="row">
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-dismiss="modal">Cancelar</button>
-                                                                    <button type="submit"
-                                                                        class="btn btn-success">Actualizar</button>
+                                                                    <button type="submit" class="btn btn-success">Actualizar</button>
                                                                 </div>
                                                             </div>
-
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-
-
                                     </td>
                                 </tr>
                             @endforeach
