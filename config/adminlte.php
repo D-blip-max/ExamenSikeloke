@@ -375,6 +375,13 @@ return [
                     'icon'    => 'fas fa-fw fa-clock',
                     'classes' => 'bg-blue text-white',
                 ],
+                [
+                    'can'     => 'admin.dias.index',
+                    'text'    => 'CU24 · Gestionar Días',
+                    'url'     => 'admin/dias',
+                    'icon'    => 'fas fa-fw fa-calendar-day',
+                    'classes' => 'bg-blue text-white',
+                ],
             ],
         ],
 

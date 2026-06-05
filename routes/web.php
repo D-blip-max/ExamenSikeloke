@@ -85,6 +85,12 @@ Route::put('/admin/turnos/{id}', [App\Http\Controllers\TurnoController::class, '
 Route::delete('/admin/turnos/{id}', [App\Http\Controllers\TurnoController::class, 'destroy'])->name('admin.turnos.destroy')->middleware('auth','can:admin.turnos.destroy');//Delete
 
 
+//rutas que van a ser de dias del sitema CreateReadUpdateDelete
+//Trabajando con Modals
+Route::get('/admin/dias', [App\Http\Controllers\DiaController::class, 'index'])->name('admin.dias.index')->middleware('auth','can:admin.dias.index');
+Route::post('/admin/dias/create', [App\Http\Controllers\DiaController::class, 'store'])->name('admin.dias.create')->middleware('auth','can:admin.dias.create');//Create
+Route::put('/admin/dias/{id}', [App\Http\Controllers\DiaController::class, 'update'])->name('admin.dias.update')->middleware('auth','can:admin.dias.update');//Update
+Route::delete('/admin/dias/{id}', [App\Http\Controllers\DiaController::class, 'destroy'])->name('admin.dias.destroy')->middleware('auth','can:admin.dias.destroy');//Delete
 
 
 

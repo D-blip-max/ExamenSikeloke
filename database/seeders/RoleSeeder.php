@@ -81,7 +81,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.turnos.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.turnos.destroy'])->syncRoles($admin);
 
-        
+         // --- PERMISOS PARA DIAS CRUD---
+        Permission::create(['name' => 'admin.dias.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.dias.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.dias.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.dias.destroy'])->syncRoles($admin);
+
 
 
     }
