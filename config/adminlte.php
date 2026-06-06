@@ -403,6 +403,13 @@ return [
                     'icon'    => 'fas fa-fw fa-chalkboard-user',
                     'classes' => 'bg-blue text-white',
                 ],
+                [
+                    'can'     => 'admin.postulantes.index',
+                    'text'    => 'CU27 · Gestionar Postulantes',
+                    'url'     => 'admin/postulantes',
+                    'icon'    => 'fas fa-fw fa-user-graduate',
+                    'classes' => 'bg-blue text-white',
+                ],
             ],
         ],
 

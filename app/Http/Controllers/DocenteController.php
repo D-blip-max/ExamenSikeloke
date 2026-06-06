@@ -56,10 +56,10 @@ class DocenteController extends Controller
             'estado' => $request->estado_create,
         ]);
 
-        // Generar contraseña: CI + Primera letra primer apellido (mayúscula) + Primera letra primer nombre (minúscula)
+        // Generar contraseña: CI + Primera letra apellido (mayúscula) + Primera letra nombre (minúscula)
         $nombreParts = explode(' ', trim($request->nombre_create));
-        $primerApellido = $nombreParts[0] ?? '';
-        $primerNombre = $nombreParts[count($nombreParts) - 1] ?? '';
+        $primerNombre = $nombreParts[0] ?? '';
+        $primerApellido = $nombreParts[count($nombreParts) - 1] ?? '';
         
         $letraApellido = strtoupper(substr($primerApellido, 0, 1));
         $letraNombre = strtolower(substr($primerNombre, 0, 1));
@@ -86,6 +86,8 @@ class DocenteController extends Controller
 
     public function update(Request $request, $id)
     {
+        $docente = Docente::find($id);
+        
         $validate = Validator::make($request->all(), [
             'ci' => 'required|unique:docentes,ci,' . $id . '|numeric',
             'nombre' => 'required|max:255',
@@ -97,6 +99,16 @@ class DocenteController extends Controller
             'estado' => 'required|in:ACTIVO,NO ACTIVO',
         ]);
 
+        // Validar que el nuevo correo no exista en users (excepto el del usuario actual)
+        $validate->after(function ($validator) use ($request, $docente) {
+            if ($request->correo !== $docente->correo) {
+                $usuarioConEseCorreo = User::where('email', $request->correo)->first();
+                if ($usuarioConEseCorreo) {
+                    $validator->errors()->add('correo', 'Este correo ya está registrado en el sistema.');
+                }
+            }
+        });
+
         if ($validate->fails()) {
             return redirect()
                 ->back()
@@ -105,7 +117,9 @@ class DocenteController extends Controller
                 ->with('modal_id', $id);
         }
 
-        $docente = Docente::find($id);
+        // Obtener usuario antes de modificar docente
+        $usuario = User::where('email', $docente->correo)->first();
+        
         $docente->ci = $request->ci;
         $docente->nombre = $request->nombre;
         $docente->correo = $request->correo;
@@ -115,6 +129,22 @@ class DocenteController extends Controller
         $docente->diplomado_edu = (bool) $request->diplomado_edu;
         $docente->estado = $request->estado;
         $docente->save();
+
+        // Sincronizar usuario asociado si existe
+        if ($usuario) {
+            // Generar nueva contraseña basada en CI + Primera letra apellido (mayús) + Primera letra nombre (minús)
+            $nombreParts = explode(' ', trim($request->nombre));
+            $primerNombre = $nombreParts[0] ?? '';
+            $primerApellido = $nombreParts[count($nombreParts) - 1] ?? '';
+            $letraApellido = strtoupper(substr($primerApellido, 0, 1));
+            $letraNombre = strtolower(substr($primerNombre, 0, 1));
+            $newPassword = $request->ci . $letraApellido . $letraNombre;
+
+            $usuario->name = $request->nombre;
+            $usuario->email = $request->correo;
+            $usuario->password = Hash::make($newPassword);
+            $usuario->save();
+        }
 
         Bitacora::create([
             'user_id' => auth()->user()->id,
@@ -131,6 +161,11 @@ class DocenteController extends Controller
     {
         $docente = Docente::find($id);
         $nombre = $docente->nombre;
+        $correoDocente = $docente->correo;
+        
+        // Eliminar usuario asociado
+        User::where('email', $correoDocente)->delete();
+        
         $docente->delete();
 
         Bitacora::create([

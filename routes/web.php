@@ -112,6 +112,14 @@ Route::post('/admin/docentes/create', [App\Http\Controllers\DocenteController::c
 Route::put('/admin/docentes/{id}', [App\Http\Controllers\DocenteController::class, 'update'])->name('admin.docentes.update')->middleware('auth','can:admin.docentes.update');//Update
 Route::delete('/admin/docentes/{id}', [App\Http\Controllers\DocenteController::class, 'destroy'])->name('admin.docentes.destroy')->middleware('auth','can:admin.docentes.destroy');//Delete
 
+// rutas que van a ser de postulantes del sistema CreateReadUpdateDelete
+// Trabajando con Modals y creación automática de usuario
+Route::get('/admin/postulantes', [App\Http\Controllers\PostulanteController::class, 'index'])->name('admin.postulantes.index')->middleware('auth','can:admin.postulantes.index');
+Route::post('/admin/postulantes/create', [App\Http\Controllers\PostulanteController::class, 'store'])->name('admin.postulantes.create')->middleware('auth','can:admin.postulantes.create');
+Route::put('/admin/postulantes/{id}', [App\Http\Controllers\PostulanteController::class, 'update'])->name('admin.postulantes.update')->middleware('auth','can:admin.postulantes.update');
+Route::delete('/admin/postulantes/{id}', [App\Http\Controllers\PostulanteController::class, 'destroy'])->name('admin.postulantes.destroy')->middleware('auth','can:admin.postulantes.destroy');//Delete
+
+
 
 
 

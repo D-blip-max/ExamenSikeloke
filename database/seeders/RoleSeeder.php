@@ -105,5 +105,11 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.docentes.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.docentes.destroy'])->syncRoles($admin);
 
+        // --- PERMISOS PARA POSTULANTES CRUD---
+        Permission::create(['name' => 'admin.postulantes.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.postulantes.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.postulantes.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.postulantes.destroy'])->syncRoles($admin);
+
     }
 }
