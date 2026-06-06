@@ -183,34 +183,14 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>Pago Confirmado</label><b> (*)</b>
-                                                        <select class="form-control" name="pago_confirmado_create" required>
-                                                            <option value="">Seleccione</option>
-                                                            <option value="VERDADERO" {{ old('pago_confirmado_create') == 'VERDADERO' ? 'selected' : '' }}>Verdadero</option>
-                                                            <option value="FALSO" {{ old('pago_confirmado_create') == 'FALSO' ? 'selected' : '' }}>Falso</option>
-                                                        </select>
-                                                        @error('pago_confirmado_create')
-                                                            <small class="text-danger">{{ $message }}</small>
-                                                        @enderror
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-info">
+                                                        <strong>Notas:</strong> Al registrar un postulante se crea automáticamente un pago en estado <strong>PENDIENTE</strong>. El postulante quedará con pago = <strong>FALSO</strong> y estado de inscripción = <strong>PENDIENTE_PAGO</strong>.
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>Estado de Inscripción</label><b> (*)</b>
-                                                        <select class="form-control" name="estado_inscripcion_create" required>
-                                                            <option value="">Seleccione estado</option>
-                                                            <option value="INSCRITO" {{ old('estado_inscripcion_create') == 'INSCRITO' ? 'selected' : '' }}>INSCRITO</option>
-                                                            <option value="PENDIENTE_PAGO" {{ old('estado_inscripcion_create') == 'PENDIENTE_PAGO' ? 'selected' : '' }}>PENDIENTE_PAGO</option>
-                                                            <option value="BLOQUEADO" {{ old('estado_inscripcion_create') == 'BLOQUEADO' ? 'selected' : '' }}>BLOQUEADO</option>
-                                                        </select>
-                                                        @error('estado_inscripcion_create')
-                                                            <small class="text-danger">{{ $message }}</small>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Gestión</label><b> (*)</b>
                                                         <select class="form-control" name="gestion_id_create" required>

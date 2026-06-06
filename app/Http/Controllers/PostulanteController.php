@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Carrera;
 use App\Models\Gestion;
+use App\Models\Pago;
 use App\Models\Postulante;
 use App\Models\User;
 use App\Models\Bitacora;
@@ -38,8 +39,6 @@ class PostulanteController extends Controller
             'titulo_bachiller_create' => 'required|in:1',
             'carrera1_id_create' => 'required|exists:carreras,id',
             'carrera2_id_create' => 'required|exists:carreras,id|different:carrera1_id_create',
-            'pago_confirmado_create' => 'required|in:VERDADERO,FALSO',
-            'estado_inscripcion_create' => 'required|in:INSCRITO,PENDIENTE_PAGO,BLOQUEADO',
             'gestion_id_create' => 'required|exists:gestions,id',
         ]);
 
@@ -73,9 +72,17 @@ class PostulanteController extends Controller
             'titulo_bachiller' => (bool) $request->titulo_bachiller_create,
             'carrera1_id' => $request->carrera1_id_create,
             'carrera2_id' => $request->carrera2_id_create,
-            'pago_confirmado' => $request->pago_confirmado_create,
-            'estado_inscripcion' => $request->estado_inscripcion_create,
             'gestion_id' => $request->gestion_id_create,
+            'pago_confirmado' => 'FALSO',
+            'estado_inscripcion' => 'PENDIENTE_PAGO',
+        ]);
+
+        Pago::create([
+            'postulante_id' => $postulante->id,
+            'comprobante' => 'AUTO-' . $postulante->id,
+            'monto' => 200,
+            'fecha' => now('America/La_Paz')->format('Y-m-d'),
+            'estado' => 'PENDIENTE',
         ]);
 
         $nombreCompleto = trim($request->nombres_create . ' ' . $request->apellidos_create);

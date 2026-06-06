@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Carrera;
 use App\Models\Gestion;
+use App\Models\Pago;
 use Illuminate\Database\Eloquent\Model;
 
 class Postulante extends Model
@@ -45,5 +46,10 @@ class Postulante extends Model
     public function carrera2()
     {
         return $this->belongsTo(Carrera::class, 'carrera2_id');
+    }
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
     }
 }

@@ -111,5 +111,11 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.postulantes.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.postulantes.destroy'])->syncRoles($admin);
 
+        // --- PERMISOS PARA PAGOS CRUD---
+        Permission::create(['name' => 'admin.pagos.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.pagos.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.pagos.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.pagos.destroy'])->syncRoles($admin);
+
     }
 }

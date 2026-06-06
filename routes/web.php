@@ -119,6 +119,12 @@ Route::post('/admin/postulantes/create', [App\Http\Controllers\PostulanteControl
 Route::put('/admin/postulantes/{id}', [App\Http\Controllers\PostulanteController::class, 'update'])->name('admin.postulantes.update')->middleware('auth','can:admin.postulantes.update');
 Route::delete('/admin/postulantes/{id}', [App\Http\Controllers\PostulanteController::class, 'destroy'])->name('admin.postulantes.destroy')->middleware('auth','can:admin.postulantes.destroy');//Delete
 
+// rutas que van a ser de pagos del sistema CreateReadUpdateDelete
+Route::get('/admin/pagos', [App\Http\Controllers\PagoController::class, 'index'])->name('admin.pagos.index')->middleware('auth','can:admin.pagos.index');
+Route::post('/admin/pagos/create', [App\Http\Controllers\PagoController::class, 'store'])->name('admin.pagos.create')->middleware('auth','can:admin.pagos.create');
+Route::put('/admin/pagos/{id}', [App\Http\Controllers\PagoController::class, 'update'])->name('admin.pagos.update')->middleware('auth','can:admin.pagos.update');
+Route::delete('/admin/pagos/{id}', [App\Http\Controllers\PagoController::class, 'destroy'])->name('admin.pagos.destroy')->middleware('auth','can:admin.pagos.destroy');//Delete
+
 
 
 
