@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-   // return view('welcome');
-     return redirect()->route('login');
+    return redirect('/login');
 });
+
 
 Auth::routes();
 
@@ -46,6 +46,13 @@ Route::get('/admin/grupos', [App\Http\Controllers\GrupoController::class, 'index
 Route::post('/admin/grupos/create', [App\Http\Controllers\GrupoController::class, 'store'])->name('admin.grupos.create')->middleware('auth','can:admin.grupos.create');//Create
 Route::put('/admin/grupos/{id}', [App\Http\Controllers\GrupoController::class, 'update'])->name('admin.grupos.update')->middleware('auth','can:admin.grupos.update');//Update
 Route::delete('/admin/grupos/{id}', [App\Http\Controllers\GrupoController::class, 'destroy'])->name('admin.grupos.destroy')->middleware('auth','can:admin.grupos.destroy');//Delete
+
+
+// rutas que van a ser de post_grupos del sistema CreateReadUpdateDelete
+Route::get('/admin/post_grupos', [App\Http\Controllers\PostGrupoController::class, 'index'])->name('admin.post_grupos.index')->middleware('auth','can:admin.post_grupos.index');
+Route::post('/admin/post_grupos/create', [App\Http\Controllers\PostGrupoController::class, 'store'])->name('admin.post_grupos.create')->middleware('auth','can:admin.post_grupos.create');
+Route::put('/admin/post_grupos/{id}', [App\Http\Controllers\PostGrupoController::class, 'update'])->name('admin.post_grupos.update')->middleware('auth','can:admin.post_grupos.update');
+Route::delete('/admin/post_grupos/{id}', [App\Http\Controllers\PostGrupoController::class, 'destroy'])->name('admin.post_grupos.destroy')->middleware('auth','can:admin.post_grupos.destroy');//Delete
 
 
 //rutas que van a ser de carreras del sitema CreateReadUpdateDelete
@@ -99,6 +106,8 @@ Route::get('/admin/config-porcentajes', [App\Http\Controllers\ConfigPorcentajeCo
 Route::post('/admin/config-porcentajes/create', [App\Http\Controllers\ConfigPorcentajeController::class, 'store'])->name('admin.config_porcentajes.create')->middleware('auth','can:admin.config_porcentajes.create');//Create
 Route::put('/admin/config-porcentajes/{id}', [App\Http\Controllers\ConfigPorcentajeController::class, 'update'])->name('admin.config_porcentajes.update')->middleware('auth','can:admin.config_porcentajes.update');//Update
 Route::delete('/admin/config-porcentajes/{id}', [App\Http\Controllers\ConfigPorcentajeController::class, 'destroy'])->name('admin.config_porcentajes.destroy')->middleware('auth','can:admin.config_porcentajes.destroy');//Delete
+
+//materias rutas
 Route::get('/admin/materias', [App\Http\Controllers\MateriaController::class, 'index'])->name('admin.materias.index')->middleware('auth','can:admin.materias.index');
 Route::post('/admin/materias/create', [App\Http\Controllers\MateriaController::class, 'store'])->name('admin.materias.create')->middleware('auth','can:admin.materias.create');//Create
 Route::put('/admin/materias/{id}', [App\Http\Controllers\MateriaController::class, 'update'])->name('admin.materias.update')->middleware('auth','can:admin.materias.update');//Update

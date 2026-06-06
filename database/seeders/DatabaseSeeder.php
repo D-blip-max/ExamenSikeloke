@@ -53,10 +53,8 @@ class DatabaseSeeder extends Seeder
         Turno::create(['nombre' => 'Noche']);
 
         //Gupo seeder
-        Grupo::create(['nombre' => 'Grupo A', 'cupo_maximo' => 30, 'inscritos' => 0, 'turno_id' => 1]);
-        Grupo::create(['nombre' => 'Grupo B', 'cupo_maximo' => 30, 'inscritos' => 0, 'turno_id' => 2]);
-        Grupo::create(['nombre' => 'Grupo C', 'cupo_maximo' => 30, 'inscritos' => 0, 'turno_id' => 3]);
-
+    
+        Grupo::create(['nombre' => 'Grupo 1', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
         //horario Seeder
 
         Horario::create(['horaInicio' => '07:00', 'horaFin' => '07:45']);
@@ -123,5 +121,11 @@ class DatabaseSeeder extends Seeder
         Materia::create(['nombre' => 'Computación']);
         Materia::create(['nombre' => 'Física']);
         Materia::create(['nombre' => 'Inglés']);
+
+        // Seed postulantes y usuarios asociados
+        $this->call(\Database\Seeders\PostulanteSeeder::class);
+
+        // Seed pagos confirmados para todos los postulantes
+        $this->call(\Database\Seeders\PagoSeeder::class);
     }
 }

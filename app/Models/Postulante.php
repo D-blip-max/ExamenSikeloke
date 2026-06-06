@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Carrera;
 use App\Models\Gestion;
 use App\Models\Pago;
+use App\Models\PostGrupo;
 use Illuminate\Database\Eloquent\Model;
 
 class Postulante extends Model
@@ -51,5 +52,10 @@ class Postulante extends Model
     public function pagos()
     {
         return $this->hasMany(Pago::class);
+    }
+
+    public function postGrupos()
+    {
+        return $this->hasMany(PostGrupo::class, 'postulante_id');
     }
 }

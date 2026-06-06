@@ -12,6 +12,8 @@ class GrupoController extends Controller
 {
     public function index()
     {
+        Grupo::ensureAutoGroups();
+
         $grupos = Grupo::all();
         $turnos = Turno::all();
         return view('admin.grupos.index', compact('grupos', 'turnos'));

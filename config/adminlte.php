@@ -341,6 +341,13 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.post_grupos.index',
+                    'text'    => 'CU26 · Asignar Postulantes a Grupo',
+                    'url'     => 'admin/post_grupos',
+                    'icon'    => 'fas fa-fw fa-user-tag',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.carreras.index',
                     'text'    => 'CU11 · Gestionar Carreras',
                     'url'     => 'admin/carreras',
