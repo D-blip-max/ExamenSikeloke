@@ -117,8 +117,8 @@ class DatabaseSeeder extends Seeder
         Dia::create(['nombre' => 'Domingo']);
 
         //Gestionar Materias
-        Materia::create(['nombre' => 'Matemáticas']);
-        Materia::create(['nombre' => 'Computación']);
+        Materia::create(['nombre' => 'Matematicas']);
+        Materia::create(['nombre' => 'Computacion']);
         Materia::create(['nombre' => 'Física']);
         Materia::create(['nombre' => 'Inglés']);
 

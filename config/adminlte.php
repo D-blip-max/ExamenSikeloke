@@ -433,6 +433,20 @@ return [
                 ],
             ],
         ],
+        [
+            'text'    => 'Paquete 3: Proceso de Admisión',
+            'icon'    => 'fas fa-fw fa-file-signature',
+            'classes' => 'bg-dark text-white',
+            'submenu' => [
+                [
+                    'can'     => 'admin.notas.index',
+                    'text'    => 'CU18 · Registrar Calificaciones',
+                    'url'     => 'admin/notas',
+                    'icon'    => 'fas fa-fw fa-clipboard-list',
+                    'classes' => 'bg-blue text-white',
+                ],
+            ],
+        ],
 
     ],
 

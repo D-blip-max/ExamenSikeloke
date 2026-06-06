@@ -115,6 +115,13 @@ Route::post('/admin/config-porcentajes/create', [App\Http\Controllers\ConfigPorc
 Route::put('/admin/config-porcentajes/{id}', [App\Http\Controllers\ConfigPorcentajeController::class, 'update'])->name('admin.config_porcentajes.update')->middleware('auth','can:admin.config_porcentajes.update');//Update
 Route::delete('/admin/config-porcentajes/{id}', [App\Http\Controllers\ConfigPorcentajeController::class, 'destroy'])->name('admin.config_porcentajes.destroy')->middleware('auth','can:admin.config_porcentajes.destroy');//Delete
 
+// rutas que van a ser de notas del sistema CreateReadUpdateDelete
+// Trabajando con Modals
+Route::get('/admin/notas', [App\Http\Controllers\NotaController::class, 'index'])->name('admin.notas.index')->middleware('auth','can:admin.notas.index');
+Route::post('/admin/notas/create', [App\Http\Controllers\NotaController::class, 'store'])->name('admin.notas.create')->middleware('auth','can:admin.notas.create');
+Route::put('/admin/notas/{id}', [App\Http\Controllers\NotaController::class, 'update'])->name('admin.notas.update')->middleware('auth','can:admin.notas.update');
+Route::delete('/admin/notas/{id}', [App\Http\Controllers\NotaController::class, 'destroy'])->name('admin.notas.destroy')->middleware('auth','can:admin.notas.destroy');//Delete
+
 //materias rutas
 Route::get('/admin/materias', [App\Http\Controllers\MateriaController::class, 'index'])->name('admin.materias.index')->middleware('auth','can:admin.materias.index');
 Route::post('/admin/materias/create', [App\Http\Controllers\MateriaController::class, 'store'])->name('admin.materias.create')->middleware('auth','can:admin.materias.create');//Create
