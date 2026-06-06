@@ -348,6 +348,13 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.asignaciones.index',
+                    'text'    => 'CU27 · Asignar Docente a Grupos',
+                    'url'     => 'admin/asignaciones',
+                    'icon'    => 'fas fa-fw fa-user-tie',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.carreras.index',
                     'text'    => 'CU11 · Gestionar Carreras',
                     'url'     => 'admin/carreras',
@@ -407,7 +414,7 @@ return [
                     'can'     => 'admin.docentes.index',
                     'text'    => 'CU15 · Gestionar Docentes',
                     'url'     => 'admin/docentes',
-                    'icon'    => 'fas fa-fw fa-chalkboard-user',
+                    'icon'    => 'fas fa-fw fa-user-tie',
                     'classes' => 'bg-blue text-white',
                 ],
                 [

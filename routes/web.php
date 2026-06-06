@@ -55,6 +55,14 @@ Route::put('/admin/post_grupos/{id}', [App\Http\Controllers\PostGrupoController:
 Route::delete('/admin/post_grupos/{id}', [App\Http\Controllers\PostGrupoController::class, 'destroy'])->name('admin.post_grupos.destroy')->middleware('auth','can:admin.post_grupos.destroy');//Delete
 
 
+// rutas que van a ser de asignaciones del sistema CreateReadUpdateDelete
+// Trabajando con Modals
+Route::get('/admin/asignaciones', [App\Http\Controllers\AsignacionController::class, 'index'])->name('admin.asignaciones.index')->middleware('auth','can:admin.asignaciones.index');
+Route::post('/admin/asignaciones/create', [App\Http\Controllers\AsignacionController::class, 'store'])->name('admin.asignaciones.create')->middleware('auth','can:admin.asignaciones.create');
+Route::put('/admin/asignaciones/{id}', [App\Http\Controllers\AsignacionController::class, 'update'])->name('admin.asignaciones.update')->middleware('auth','can:admin.asignaciones.update');
+Route::delete('/admin/asignaciones/{id}', [App\Http\Controllers\AsignacionController::class, 'destroy'])->name('admin.asignaciones.destroy')->middleware('auth','can:admin.asignaciones.destroy');//Delete
+
+
 //rutas que van a ser de carreras del sitema CreateReadUpdateDelete
 //Trabajando con Modals
 Route::get('/admin/carreras', [App\Http\Controllers\CarreraController::class, 'index'])->name('admin.carreras.index')->middleware('auth','can:admin.carreras.index');

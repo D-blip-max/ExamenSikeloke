@@ -58,6 +58,11 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.post_grupos.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.post_grupos.destroy'])->syncRoles($admin);
 
+        // --- PERMISOS PARA ASIGNACIONES CRUD---
+        Permission::create(['name' => 'admin.asignaciones.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.asignaciones.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.asignaciones.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.asignaciones.destroy'])->syncRoles($admin);
 
         // --- PERMISOS PARA CARRERAS CRUD---
         Permission::create(['name' => 'admin.carreras.index'])->syncRoles($admin);
