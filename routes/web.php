@@ -9,7 +9,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
 
 //ruta para bitacora
 Route::get('/admin/bitacora', [App\Http\Controllers\BitacoraController::class, 'index'])->name('admin.bitacora.index')->middleware('auth','can:admin.bitacora.index');
@@ -103,6 +103,14 @@ Route::get('/admin/materias', [App\Http\Controllers\MateriaController::class, 'i
 Route::post('/admin/materias/create', [App\Http\Controllers\MateriaController::class, 'store'])->name('admin.materias.create')->middleware('auth','can:admin.materias.create');//Create
 Route::put('/admin/materias/{id}', [App\Http\Controllers\MateriaController::class, 'update'])->name('admin.materias.update')->middleware('auth','can:admin.materias.update');//Update
 Route::delete('/admin/materias/{id}', [App\Http\Controllers\MateriaController::class, 'destroy'])->name('admin.materias.destroy')->middleware('auth','can:admin.materias.destroy');//Delete
+
+//rutas que van a ser de docentes del sistema CreateReadUpdateDelete
+//Trabajando con Modals y búsqueda en tiempo real
+Route::get('/admin/docentes', [App\Http\Controllers\DocenteController::class, 'index'])->name('admin.docentes.index')->middleware('auth','can:admin.docentes.index');
+Route::get('/admin/docentes/buscar', [App\Http\Controllers\DocenteController::class, 'buscar'])->name('admin.docentes.buscar')->middleware('auth','can:admin.docentes.index');
+Route::post('/admin/docentes/create', [App\Http\Controllers\DocenteController::class, 'store'])->name('admin.docentes.create')->middleware('auth','can:admin.docentes.create');//Create
+Route::put('/admin/docentes/{id}', [App\Http\Controllers\DocenteController::class, 'update'])->name('admin.docentes.update')->middleware('auth','can:admin.docentes.update');//Update
+Route::delete('/admin/docentes/{id}', [App\Http\Controllers\DocenteController::class, 'destroy'])->name('admin.docentes.destroy')->middleware('auth','can:admin.docentes.destroy');//Delete
 
 
 

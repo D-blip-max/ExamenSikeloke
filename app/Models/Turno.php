@@ -14,4 +14,9 @@ class Turno extends Model
     {
         return $this->hasMany(Grupo::class, 'turno_id');
     }
+
+    public function docentes()
+    {
+        return $this->hasMany(Docente::class, 'turno_id');
+    }
 }

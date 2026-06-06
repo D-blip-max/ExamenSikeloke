@@ -396,6 +396,13 @@ return [
                     'icon'    => 'fas fa-fw fa-book-open',
                     'classes' => 'bg-blue text-white',
                 ],
+                [
+                    'can'     => 'admin.docentes.index',
+                    'text'    => 'CU26 · Gestionar Docentes',
+                    'url'     => 'admin/docentes',
+                    'icon'    => 'fas fa-fw fa-chalkboard-user',
+                    'classes' => 'bg-blue text-white',
+                ],
             ],
         ],
 
