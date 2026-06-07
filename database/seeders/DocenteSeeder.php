@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Docente;
 use App\Models\Turno;
 use App\Models\Materia;
+use App\Models\User;
 
 class DocenteSeeder extends Seeder
 {
@@ -56,10 +58,23 @@ class DocenteSeeder extends Seeder
         ];
 
         foreach ($docentes as $docente) {
-            Docente::updateOrCreate(
+            $savedDocente = Docente::updateOrCreate(
                 ['ci' => $docente['ci']],
                 array_merge($docente, ['turno_id' => $turno->id])
             );
+
+            $user = User::firstOrCreate(
+                ['email' => $savedDocente->correo],
+                [
+                    'name' => $savedDocente->nombre,
+                    'password' => Hash::make($savedDocente->ci),
+                    'email_verified_at' => now('America/La_Paz'),
+                ]
+            );
+
+            if (! $user->hasRole('Docente')) {
+                $user->assignRole('Docente');
+            }
         }
     }
 }
