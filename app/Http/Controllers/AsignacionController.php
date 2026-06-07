@@ -18,6 +18,17 @@ class AsignacionController extends Controller
     public function index()
     {
         $asignaciones = Asignacion::with(['grupo', 'materia', 'docente', 'aula', 'dia', 'horario'])->get();
+        $asignacionesByGrupo = $asignaciones
+            ->groupBy('grupo_id')
+            ->sortBy(function ($group) {
+                return $group->first()->grupo->nombre ?? '';
+            })
+            ->map(function ($group) {
+                return $group->sortBy(function ($a) {
+                    return $a->materia->nombre ?? '';
+                })->values();
+            });
+
         $grupos = Grupo::orderBy('nombre')->get();
         $materias = Materia::orderBy('nombre')->get();
         $docentes = Docente::orderBy('nombre')->get();
@@ -25,7 +36,7 @@ class AsignacionController extends Controller
         $dias = Dia::orderBy('id')->get();
         $horarios = Horario::orderBy('horaInicio')->get();
 
-        return view('admin.asignaciones.index', compact('asignaciones', 'grupos', 'materias', 'docentes', 'aulas', 'dias', 'horarios'));
+        return view('admin.asignaciones.index', compact('asignacionesByGrupo', 'grupos', 'materias', 'docentes', 'aulas', 'dias', 'horarios'));
     }
 
     public function store(Request $request)

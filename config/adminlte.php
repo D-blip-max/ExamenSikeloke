@@ -468,7 +468,20 @@ return [
                 ],
             ],
         ],
-
+        [
+            'text'    => 'Paquete 4: Reportes',
+            'icon'    => 'fas fa-fw fa-chart-bar',
+            'classes' => 'bg-dark text-white',
+            'submenu' => [
+                [
+                    'can'     => 'admin.reportes.index',
+                    'text'    => 'CU21 · Generar Reporte',
+                    'url'     => 'admin/reportes',
+                    'icon'    => 'fas fa-fw fa-file-alt',
+                    'classes' => 'bg-blue text-white',
+                ],
+            ],
+        ],
     ],
 
     /*

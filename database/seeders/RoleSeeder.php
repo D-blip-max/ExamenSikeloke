@@ -116,6 +116,9 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.notas.update'])->syncRoles($admin);
         Permission::create(['name' => 'admin.notas.destroy'])->syncRoles($admin);
 
+        // --- PERMISOS PARA REPORTES (CU21) ---
+        Permission::create(['name' => 'admin.reportes.index'])->syncRoles($admin);
+
         // --- PERMISOS PARA ADMITIDOS (CU19) ---
         Permission::create(['name' => 'admin.admitidos.index'])->syncRoles($admin);
         Permission::create(['name' => 'admin.admitidos.create'])->syncRoles($admin);

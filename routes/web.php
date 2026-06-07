@@ -160,6 +160,15 @@ Route::post('/admin/pagos/create', [App\Http\Controllers\PagoController::class, 
 Route::put('/admin/pagos/{id}', [App\Http\Controllers\PagoController::class, 'update'])->name('admin.pagos.update')->middleware('auth','can:admin.pagos.update');
 Route::delete('/admin/pagos/{id}', [App\Http\Controllers\PagoController::class, 'destroy'])->name('admin.pagos.destroy')->middleware('auth','can:admin.pagos.destroy');//Delete
 
+// Reportes - paquete 4 (CU21 Generar Reporte)
+use App\Http\Controllers\ReporteController;
+
+Route::prefix('admin/reportes')->group(function () {
+    Route::get('/', [ReporteController::class, 'index'])->name('admin.reportes.index')->middleware('auth','can:admin.reportes.index');
+    Route::get('generar/{tipo}', [ReporteController::class, 'generar'])->name('admin.reportes.generar')->middleware('auth','can:admin.reportes.index');
+    Route::get('export/{tipo}', [ReporteController::class, 'export'])->name('admin.reportes.export')->middleware('auth','can:admin.reportes.index');
+});
+
 
 
 

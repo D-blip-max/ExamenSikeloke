@@ -119,13 +119,21 @@ class DatabaseSeeder extends Seeder
         //Gestionar Materias
         Materia::create(['nombre' => 'Matematicas']);
         Materia::create(['nombre' => 'Computacion']);
-        Materia::create(['nombre' => 'Física']);
-        Materia::create(['nombre' => 'Inglés']);
+        Materia::create(['nombre' => 'Fisica']);
+        Materia::create(['nombre' => 'Ingles']);
 
         // Seed postulantes y usuarios asociados
         $this->call(\Database\Seeders\PostulanteSeeder::class);
 
         // Seed pagos confirmados para todos los postulantes
         $this->call(\Database\Seeders\PagoSeeder::class);
+
+        // Seed notas y el resultado de admitidos / reprobados para los postulantes
+        $this->call(\Database\Seeders\NotaSeeder::class);
+
+        // Seed docentes, asignaciones y grupos de postulantes al Grupo 1
+        $this->call(\Database\Seeders\DocenteSeeder::class);
+        $this->call(\Database\Seeders\AsignacionDocenteGrupoSeeder::class);
+        $this->call(\Database\Seeders\PostulanteGrupoSeeder::class);
     }
 }
