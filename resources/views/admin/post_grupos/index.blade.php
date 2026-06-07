@@ -90,6 +90,7 @@
                         </div>
                     </div>
                 </div>
+                    <p class="m-3 text-muted">Administra las asignaciones de postulantes a grupos. Usa la búsqueda para filtrar por postulante o grupo.</p>
 
                 <div class="card-body">
                     @if($postGruposByGrupo->count())
@@ -108,7 +109,7 @@
                                     <div id="collapseGrupo{{ $grupoId }}" class="collapse" aria-labelledby="headingGrupo{{ $grupoId }}" data-parent="#gruposAccordion">
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered table-sm table-hover mb-0">
+                                                <table class="table table-bordered table-sm table-hover table-striped mb-0">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>#</th>
