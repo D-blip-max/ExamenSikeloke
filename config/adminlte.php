@@ -445,6 +445,27 @@ return [
                     'icon'    => 'fas fa-fw fa-clipboard-list',
                     'classes' => 'bg-blue text-white',
                 ],
+                [
+                    'text'    => 'CU19 · Consultar Resultados',
+                    'icon'    => 'fas fa-fw fa-search',
+                    'classes' => 'bg-blue text-white',
+                    'submenu' => [
+                        [
+                            'can'     => 'admin.admitidos.index',
+                            'text'    => 'Admitidos',
+                            'url'     => 'admin/admitidos',
+                            'icon'    => 'fas fa-fw fa-user-check',
+                            'classes' => 'bg-info text-white',
+                        ],
+                        [
+                            'can'     => 'admin.reprobados.index',
+                            'text'    => 'Reprobados',
+                            'url'     => 'admin/reprobados',
+                            'icon'    => 'fas fa-fw fa-user-times',
+                            'classes' => 'bg-danger text-white',
+                        ],
+                    ],
+                ],
             ],
         ],
 

@@ -122,6 +122,17 @@ Route::post('/admin/notas/create', [App\Http\Controllers\NotaController::class, 
 Route::put('/admin/notas/{id}', [App\Http\Controllers\NotaController::class, 'update'])->name('admin.notas.update')->middleware('auth','can:admin.notas.update');
 Route::delete('/admin/notas/{id}', [App\Http\Controllers\NotaController::class, 'destroy'])->name('admin.notas.destroy')->middleware('auth','can:admin.notas.destroy');//Delete
 
+// rutas que van a ser de admitidos del sistema
+// CU19 Consultar Resultados
+Route::get('/admin/admitidos', [App\Http\Controllers\AdmitidoController::class, 'index'])->name('admin.admitidos.index')->middleware('auth','can:admin.admitidos.index');
+Route::post('/admin/admitidos/asignar', [App\Http\Controllers\AdmitidoController::class, 'asignarCarrera'])->name('admin.admitidos.asignar')->middleware('auth','can:admin.admitidos.create');
+Route::delete('/admin/admitidos/{id}', [App\Http\Controllers\AdmitidoController::class, 'destroy'])->name('admin.admitidos.destroy')->middleware('auth','can:admin.admitidos.destroy');//Delete
+
+// rutas que van a ser de reprobados del sistema
+Route::get('/admin/reprobados', [App\Http\Controllers\ReprobadoController::class, 'index'])->name('admin.reprobados.index')->middleware('auth','can:admin.reprobados.index');
+Route::post('/admin/reprobados/create', [App\Http\Controllers\ReprobadoController::class, 'store'])->name('admin.reprobados.create')->middleware('auth','can:admin.reprobados.create');
+Route::delete('/admin/reprobados/{id}', [App\Http\Controllers\ReprobadoController::class, 'destroy'])->name('admin.reprobados.destroy')->middleware('auth','can:admin.reprobados.destroy');//Delete
+
 //materias rutas
 Route::get('/admin/materias', [App\Http\Controllers\MateriaController::class, 'index'])->name('admin.materias.index')->middleware('auth','can:admin.materias.index');
 Route::post('/admin/materias/create', [App\Http\Controllers\MateriaController::class, 'store'])->name('admin.materias.create')->middleware('auth','can:admin.materias.create');//Create

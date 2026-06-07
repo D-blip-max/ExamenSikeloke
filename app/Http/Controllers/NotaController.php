@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admitido;
 use App\Models\Bitacora;
+use App\Models\Carrera;
 use App\Models\ConfigPorcentaje;
 use App\Models\Materia;
 use App\Models\Nota;
 use App\Models\Postulante;
+use App\Models\Reprobado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class NotaController extends Controller
@@ -118,6 +122,9 @@ class NotaController extends Controller
             'hora' => now('America/La_Paz'),
         ]);
 
+        // Verificar si se completaron las 12 notas y procesar automáticamente
+        $this->verificarYProcesarNotas($request->postulante_id_create);
+
         return redirect()->route('admin.notas.index')
             ->with('mensaje', 'La nota se ha registrado correctamente.')
             ->with('icono', 'success');
@@ -203,6 +210,9 @@ class NotaController extends Controller
             'hora' => now('America/La_Paz'),
         ]);
 
+        // Verificar si se completaron las 12 notas y procesar automáticamente
+        $this->verificarYProcesarNotas($request->postulante_id);
+
         return redirect()->route('admin.notas.index')
             ->with('mensaje', 'La nota se ha actualizado correctamente')
             ->with('icono', 'success');
@@ -213,6 +223,8 @@ class NotaController extends Controller
         $nota = Nota::findOrFail($id);
         $nota->delete();
 
+        $postulanteId = $nota->postulante_id;
+
         Bitacora::create([
             'user_id' => auth()->user()->id,
             'accion' => 'Se eliminó una nota: ID ' . $id,
@@ -222,5 +234,206 @@ class NotaController extends Controller
         return redirect()->route('admin.notas.index')
             ->with('mensaje', 'La nota se ha eliminado correctamente')
             ->with('icono', 'success');
+    }
+
+    // Método helper para verificar si se completaron 12 notas y procesar automáticamente
+    private function verificarYProcesarNotas($postulanteId)
+    {
+        $countNotas = Nota::where('postulante_id', $postulanteId)->count();
+
+        // Si no tiene exactamente 12 notas, no procesar
+        if ($countNotas != 12) {
+            return;
+        }
+
+        // Verificar si ya está en admitidos o reprobados
+        if (Admitido::where('postulante_id', $postulanteId)->exists()) {
+            return;
+        }
+
+        if (Reprobado::where('postulante_id', $postulanteId)->exists()) {
+            return;
+        }
+
+        // Obtener postulante
+        $postulante = Postulante::findOrFail($postulanteId);
+
+        // Calcular promedio final
+        $promedios = Nota::selectRaw('notas.materia_id, SUM(notas.nota * config_porcentaje.ponderacion / 100) as promedio')
+            ->join('config_porcentaje', 'notas.config_examen_id', '=', 'config_porcentaje.id')
+            ->where('notas.postulante_id', $postulanteId)
+            ->groupBy('notas.materia_id')
+            ->get();
+
+        if ($promedios->count() == 0) {
+            return;
+        }
+
+        $promedioFinal = round($promedios->avg('promedio'), 2);
+
+        // Si promedio < 60, registrar como reprobado
+        if ($promedioFinal < 60) {
+            Reprobado::create([
+                'postulante_id' => $postulanteId,
+                'promedio_final' => $promedioFinal,
+                'motivo' => 'PROMEDIO INSUFICIENTE',
+                'detalle' => "Se completaron las 12 notas con promedio {$promedioFinal}",
+                'fecha_registro' => now()->format('Y-m-d'),
+            ]);
+
+            Bitacora::create([
+                'user_id' => auth()->user()->id,
+                'accion' => "Se registró automáticamente como reprobado al postulante {$postulanteId} con promedio {$promedioFinal}",
+                'hora' => now('America/La_Paz'),
+            ]);
+
+            return;
+        }
+
+        // Si promedio >= 60, intentar asignar automáticamente entre las dos opciones del postulante
+        $carrera1 = $postulante->carrera1_id ? Carrera::find($postulante->carrera1_id) : null;
+        $carrera2 = $postulante->carrera2_id ? Carrera::find($postulante->carrera2_id) : null;
+
+        // Si no tiene opciones, crear admitido sin carrera (fallback)
+        if (!$carrera1 && !$carrera2) {
+            Admitido::create([
+                'postulante_id' => $postulanteId,
+                'carrera_id' => null,
+                'opcion_asignada' => 'AUTOMÁTICO',
+                'promedio_final' => $promedioFinal,
+                'fecha_asignacion' => now()->format('Y-m-d'),
+            ]);
+
+            Bitacora::create([
+                'user_id' => auth()->user()->id,
+                'accion' => "Se registró automáticamente como admitido al postulante {$postulanteId} con promedio {$promedioFinal} (sin opciones de carrera)",
+                'hora' => now('America/La_Paz'),
+            ]);
+
+            return;
+        }
+
+        // Preparar lista de opciones disponibles (solo las dos opciones del postulante)
+        $opciones = [];
+        if ($carrera1) $opciones[] = ['model' => $carrera1, 'tipo' => '1RA OPCIÓN'];
+        if ($carrera2) $opciones[] = ['model' => $carrera2, 'tipo' => '2DA OPCIÓN'];
+
+        // Buscar candidatas que cumplan nota_minima
+        $conCupo = [];
+        $sinCupo = [];
+        foreach ($opciones as $opt) {
+            $c = $opt['model'];
+            if ($promedioFinal >= $c->nota_minima) {
+                if ($c->cupo_disponible > 0) {
+                    $conCupo[] = $opt;
+                } else {
+                    $sinCupo[] = $opt;
+                }
+            }
+        }
+
+        DB::beginTransaction();
+        try {
+            if (count($conCupo) > 0) {
+                // Elegir la carrera con menor nota_minima entre las que cumplen y tienen cupo
+                usort($conCupo, function ($a, $b) {
+                    return $a['model']->nota_minima <=> $b['model']->nota_minima;
+                });
+                $seleccion = $conCupo[0];
+                $cModel = $seleccion['model'];
+                $opcion = $seleccion['tipo'];
+
+                $admitido = Admitido::create([
+                    'postulante_id' => $postulanteId,
+                    'carrera_id' => $cModel->id,
+                    'opcion_asignada' => $opcion,
+                    'promedio_final' => $promedioFinal,
+                    'fecha_asignacion' => now()->format('Y-m-d'),
+                ]);
+
+                $cModel->cupo_disponible = max(0, $cModel->cupo_disponible - 1);
+                $cModel->save();
+
+                DB::commit();
+
+                Bitacora::create([
+                    'user_id' => auth()->user()->id,
+                    'accion' => "Se asignó automáticamente la carrera {$cModel->nombre} al postulante {$postulanteId}",
+                    'hora' => now('America/La_Paz'),
+                ]);
+
+                return;
+            }
+
+            if (count($sinCupo) > 0) {
+                // Elegir la de menor nota_minima entre las que cumplen pero no tienen cupo
+                usort($sinCupo, function ($a, $b) {
+                    return $a['model']->nota_minima <=> $b['model']->nota_minima;
+                });
+                $seleccion = $sinCupo[0];
+                $cModel = $seleccion['model'];
+                $opcion = $seleccion['tipo'];
+
+                $admitido = Admitido::create([
+                    'postulante_id' => $postulanteId,
+                    'carrera_id' => $cModel->id,
+                    'opcion_asignada' => $opcion . ' (sin cupo)',
+                    'promedio_final' => $promedioFinal,
+                    'fecha_asignacion' => now()->format('Y-m-d'),
+                ]);
+
+                DB::commit();
+
+                Bitacora::create([
+                    'user_id' => auth()->user()->id,
+                    'accion' => "Se registró admitido (sin cupo) en {$cModel->nombre} para el postulante {$postulanteId}",
+                    'hora' => now('America/La_Paz'),
+                ]);
+
+                return;
+            }
+
+            // Si ninguna opción cumple la nota_minima, asignar a la carrera con menor nota_minima entre las dos opciones
+            usort($opciones, function ($a, $b) {
+                return $a['model']->nota_minima <=> $b['model']->nota_minima;
+            });
+            $seleccion = $opciones[0];
+            $cModel = $seleccion['model'];
+            $opcion = $seleccion['tipo'];
+
+            $admitido = Admitido::create([
+                'postulante_id' => $postulanteId,
+                'carrera_id' => $cModel->id,
+                'opcion_asignada' => $opcion . ' (ASIGNADA_AUTOMÁTICA)',
+                'promedio_final' => $promedioFinal,
+                'fecha_asignacion' => now()->format('Y-m-d'),
+            ]);
+
+            DB::commit();
+
+            Bitacora::create([
+                'user_id' => auth()->user()->id,
+                'accion' => "Se asignó automáticamente (sin cumplir nota_minima) la carrera {$cModel->nombre} al postulante {$postulanteId}",
+                'hora' => now('America/La_Paz'),
+            ]);
+
+            return;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Si ocurre un error, registrar admitido como pendiente (fallback)
+            Admitido::create([
+                'postulante_id' => $postulanteId,
+                'carrera_id' => null,
+                'opcion_asignada' => 'PENDIENTE',
+                'promedio_final' => $promedioFinal,
+                'fecha_asignacion' => now()->format('Y-m-d'),
+            ]);
+
+            Bitacora::create([
+                'user_id' => auth()->user()->id,
+                'accion' => "Error al asignar automáticamente al postulante {$postulanteId}: " . $e->getMessage(),
+                'hora' => now('America/La_Paz'),
+            ]);
+        }
     }
 }
