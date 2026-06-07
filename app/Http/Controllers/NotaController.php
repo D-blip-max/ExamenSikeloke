@@ -334,77 +334,58 @@ class NotaController extends Controller
 
         DB::beginTransaction();
         try {
-            if (count($conCupo) > 0) {
-                // Elegir la carrera con menor nota_minima entre las que cumplen y tienen cupo
-                usort($conCupo, function ($a, $b) {
+            // Priorizar primera opción si cumple con la nota mínima y tiene cupo
+            if ($carrera1 && $promedioFinal >= $carrera1->nota_minima && $carrera1->cupo_disponible > 0) {
+                $cModel = $carrera1;
+                $opcion = '1RA OPCIÓN';
+            } elseif ($carrera2 && $promedioFinal >= $carrera2->nota_minima && $carrera2->cupo_disponible > 0) {
+                $cModel = $carrera2;
+                $opcion = '2DA OPCIÓN';
+            } elseif ($carrera1 && $promedioFinal >= $carrera1->nota_minima && $carrera1->cupo_disponible <= 0) {
+                $cModel = $carrera1;
+                $opcion = '1RA OPCIÓN (sin cupo)';
+            } elseif ($carrera2 && $promedioFinal >= $carrera2->nota_minima && $carrera2->cupo_disponible <= 0) {
+                $cModel = $carrera2;
+                $opcion = '2DA OPCIÓN (sin cupo)';
+            } else {
+                // Si ninguna opción cumple la nota_minima, asignar a la carrera con menor nota_minima entre las opciones disponibles
+                usort($opciones, function ($a, $b) {
                     return $a['model']->nota_minima <=> $b['model']->nota_minima;
                 });
-                $seleccion = $conCupo[0];
+                $seleccion = $opciones[0];
                 $cModel = $seleccion['model'];
-                $opcion = $seleccion['tipo'];
-
-                $admitido = Admitido::create([
-                    'postulante_id' => $postulanteId,
-                    'carrera_id' => $cModel->id,
-                    'opcion_asignada' => $opcion,
-                    'promedio_final' => $promedioFinal,
-                    'fecha_asignacion' => now()->format('Y-m-d'),
-                ]);
-
-                $cModel->cupo_disponible = max(0, $cModel->cupo_disponible - 1);
-                $cModel->save();
-
-                DB::commit();
-
-                Bitacora::create([
-                    'user_id' => auth()->user()->id,
-                    'accion' => "Se asignó automáticamente la carrera {$cModel->nombre} al postulante {$postulanteId}",
-                    'hora' => now('America/La_Paz'),
-                ]);
-
-                return;
+                $opcion = $seleccion['tipo'] . ' (ASIGNADA_AUTOMÁTICA)';
             }
-
-            if (count($sinCupo) > 0) {
-                // Elegir la de menor nota_minima entre las que cumplen pero no tienen cupo
-                usort($sinCupo, function ($a, $b) {
-                    return $a['model']->nota_minima <=> $b['model']->nota_minima;
-                });
-                $seleccion = $sinCupo[0];
-                $cModel = $seleccion['model'];
-                $opcion = $seleccion['tipo'];
-
-                $admitido = Admitido::create([
-                    'postulante_id' => $postulanteId,
-                    'carrera_id' => $cModel->id,
-                    'opcion_asignada' => $opcion . ' (sin cupo)',
-                    'promedio_final' => $promedioFinal,
-                    'fecha_asignacion' => now()->format('Y-m-d'),
-                ]);
-
-                DB::commit();
-
-                Bitacora::create([
-                    'user_id' => auth()->user()->id,
-                    'accion' => "Se registró admitido (sin cupo) en {$cModel->nombre} para el postulante {$postulanteId}",
-                    'hora' => now('America/La_Paz'),
-                ]);
-
-                return;
-            }
-
-            // Si ninguna opción cumple la nota_minima, asignar a la carrera con menor nota_minima entre las dos opciones
-            usort($opciones, function ($a, $b) {
-                return $a['model']->nota_minima <=> $b['model']->nota_minima;
-            });
-            $seleccion = $opciones[0];
-            $cModel = $seleccion['model'];
-            $opcion = $seleccion['tipo'];
 
             $admitido = Admitido::create([
                 'postulante_id' => $postulanteId,
                 'carrera_id' => $cModel->id,
-                'opcion_asignada' => $opcion . ' (ASIGNADA_AUTOMÁTICA)',
+                'opcion_asignada' => $opcion,
+                'promedio_final' => $promedioFinal,
+                'fecha_asignacion' => now()->format('Y-m-d'),
+            ]);
+
+            if ($promedioFinal >= $cModel->nota_minima && $cModel->cupo_disponible > 0) {
+                $cModel->cupo_disponible = max(0, $cModel->cupo_disponible - 1);
+                $cModel->save();
+            }
+
+            DB::commit();
+
+            Bitacora::create([
+                'user_id' => auth()->user()->id,
+                'accion' => "Se asignó automáticamente la carrera {$cModel->nombre} al postulante {$postulanteId}",
+                'hora' => now('America/La_Paz'),
+            ]);
+
+            return;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Si ocurre un error, registrar admitido como pendiente (fallback)
+            Admitido::create([
+                'postulante_id' => $postulanteId,
+                'carrera_id' => null,
+                'opcion_asignada' => 'PENDIENTE',
                 'promedio_final' => $promedioFinal,
                 'fecha_asignacion' => now()->format('Y-m-d'),
             ]);
