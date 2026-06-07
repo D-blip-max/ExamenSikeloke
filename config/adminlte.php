@@ -316,6 +316,13 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.password.change',
+                    'text'    => 'CU03 · Cambiar Contraseña',
+                    'route'   => 'admin.password.edit',
+                    'icon'    => 'fas fa-fw fa-key',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.roles.index',
                     'text'    => 'CU4 · Gestionar Roles',
                     'url'     => 'admin/roles',

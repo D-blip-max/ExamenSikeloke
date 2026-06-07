@@ -33,7 +33,7 @@ class RoleSeeder extends Seeder
 
         // --- PERMISOS PARA BITACORAS CRUD---
         Permission::create(['name' => 'admin.bitacora.index'])->syncRoles($admin);
-
+        Permission::create(['name' => 'admin.password.change'])->syncRoles(Role::all());
 
         // --- PERMISOS PARA ROLES CRUD---
         Permission::create(['name' => 'admin.roles.index'])->syncRoles($admin);

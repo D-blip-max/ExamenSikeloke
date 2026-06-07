@@ -14,6 +14,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //ruta para bitacora
 Route::get('/admin/bitacora', [App\Http\Controllers\BitacoraController::class, 'index'])->name('admin.bitacora.index')->middleware('auth','can:admin.bitacora.index');
 
+Route::get('/admin/cambiar-contrasena', [App\Http\Controllers\PasswordController::class, 'edit'])->name('admin.password.edit')->middleware('auth','can:admin.password.change');
+Route::put('/admin/cambiar-contrasena', [App\Http\Controllers\PasswordController::class, 'update'])->name('admin.password.update')->middleware('auth','can:admin.password.change');
 
 //rutas que van a ser de gestiones del sitema CreateReadUpdateDelete
 //trabajando con vistas
