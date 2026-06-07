@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Postulante;
 use App\Models\Docente;
 use App\Models\Grupo;
+use App\Models\Asignacion;
 use App\Models\Reprobado;
 
 class HomeController extends Controller
@@ -32,15 +33,31 @@ class HomeController extends Controller
         $role = $user->getRoleNames()->first() ?? '';
 
         $student = null;
+        $studentGroup = null;
+        $studentGroupMaterias = collect();
         $docente = null;
+        $docenteSchedule = collect();
         $metrics = [];
 
         if ($role === 'Estudiante') {
-            $student = Postulante::where('correo', $user->email)->first();
+            $student = Postulante::with(['postGrupos.grupo'])->where('correo', $user->email)->first();
+            if ($student && $student->postGrupos->isNotEmpty()) {
+                $studentGroup = $student->postGrupos->first()->grupo;
+                if ($studentGroup) {
+                    $studentGroupMaterias = Asignacion::with('materia')
+                        ->where('grupo_id', $studentGroup->id)
+                        ->get();
+                }
+            }
         }
 
         if ($role === 'Docente') {
-            $docente = Docente::where('correo', $user->email)->first();
+            $docente = Docente::with(['turno', 'asignaciones.grupo', 'asignaciones.materia', 'asignaciones.dia', 'asignaciones.horario', 'asignaciones.aula'])
+                ->where('correo', $user->email)
+                ->first();
+            if ($docente) {
+                $docenteSchedule = $docente->asignaciones;
+            }
         }
 
         if ($role === 'Administrador') {
@@ -64,6 +81,6 @@ class HomeController extends Controller
             ];
         }
 
-        return view('home', compact('user', 'role', 'student', 'docente', 'metrics'));
+        return view('home', compact('user', 'role', 'student', 'studentGroup', 'studentGroupMaterias', 'docente', 'docenteSchedule', 'metrics'));
     }
 }

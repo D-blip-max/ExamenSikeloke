@@ -61,7 +61,7 @@
     @elseif ($role === 'Estudiante')
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-header">Datos del estudiante</div>
                     <div class="card-body">
                         <p><strong>Nombre:</strong> {{ $user->name }}</p>
@@ -77,20 +77,86 @@
                 </div>
             </div>
         </div>
-    @elseif ($role === 'Docente')
         <div class="row">
             <div class="col-12">
                 <div class="card">
+                    <div class="card-header">Asignación de grupo</div>
+                    <div class="card-body">
+                        @if ($studentGroup)
+                            <p><strong>Grupo asignado:</strong> {{ $studentGroup->nombre }}</p>
+                            <p><strong>Turno:</strong> {{ $studentGroup->turno->nombre ?? 'No definido' }}</p>
+                            @if ($studentGroupMaterias->isNotEmpty())
+                                <p><strong>Materias asignadas en el grupo:</strong></p>
+                                <ul>
+                                    @foreach ($studentGroupMaterias as $asignacion)
+                                        <li>{{ $asignacion->materia->nombre ?? 'Materia sin nombre' }}
+                                            @if ($asignacion->dia || $asignacion->horario)
+                                                — {{ $asignacion->dia->nombre ?? '' }} {{ $asignacion->horario->horaInicio ?? '' }} - {{ $asignacion->horario->horaFin ?? '' }}
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p class="text-muted">No hay materias asignadas todavía en este grupo.</p>
+                            @endif
+                        @else
+                            <p class="text-muted">No tienes un grupo asignado.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    @elseif ($role === 'Docente')
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
                     <div class="card-header">Datos del docente</div>
                     <div class="card-body">
                         <p><strong>Nombre:</strong> {{ $user->name }}</p>
                         <p><strong>Correo:</strong> {{ $user->email }}</p>
                         @if ($docente)
                             <p><strong>CI:</strong> {{ $docente->ci }}</p>
-                            <p><strong>Categoría:</strong> {{ $docente->categoria }}</p>
-                            <p><strong>Turno:</strong> {{ $docente->turno }}</p>
+                            <p><strong>Categoría:</strong> {{ $docente->categoria ?? '-' }}</p>
+                            <p><strong>Turno:</strong> {{ $docente->turno->nombre ?? 'No definido' }}</p>
                         @else
                             <p class="text-muted">No se encontró información adicional del docente.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">Horario asignado</div>
+                    <div class="card-body">
+                        @if ($docente && $docenteSchedule->isNotEmpty())
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Grupo</th>
+                                            <th>Materia</th>
+                                            <th>Día</th>
+                                            <th>Horario</th>
+                                            <th>Aula</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($docenteSchedule as $asignacion)
+                                            <tr>
+                                                <td>{{ $asignacion->grupo->nombre ?? '-' }}</td>
+                                                <td>{{ $asignacion->materia->nombre ?? '-' }}</td>
+                                                <td>{{ $asignacion->dia->nombre ?? '-' }}</td>
+                                                <td>{{ $asignacion->horario ? ($asignacion->horario->horaInicio . ' - ' . $asignacion->horario->horaFin) : '-' }}</td>
+                                                <td>{{ $asignacion->aula->nombre ?? '-' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p class="text-muted">No hay horario asignado para este docente.</p>
                         @endif
                     </div>
                 </div>

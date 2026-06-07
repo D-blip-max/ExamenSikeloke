@@ -34,4 +34,9 @@ class Docente extends Model
     {
         return $this->hasOne(User::class, 'email', 'correo');
     }
+
+    public function asignaciones()
+    {
+        return $this->hasMany(\App\Models\Asignacion::class, 'docente_id');
+    }
 }
