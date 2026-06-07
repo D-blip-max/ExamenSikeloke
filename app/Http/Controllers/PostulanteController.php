@@ -17,7 +17,7 @@ class PostulanteController extends Controller
 {
     public function index()
     {
-        $postulantes = Postulante::with(['gestion', 'carrera1', 'carrera2'])->get();
+        $postulantes = Postulante::with(['gestion', 'carrera1', 'carrera2'])->orderBy('apellidos')->orderBy('nombres')->get();
         $carreras = Carrera::all();
         $gestiones = Gestion::all();
 

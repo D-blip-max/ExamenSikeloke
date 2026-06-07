@@ -35,6 +35,9 @@ class PostulanteSeeder extends Seeder
         $carreras = Carrera::pluck('id')->toArray();
         $gestiones = Gestion::pluck('id')->toArray();
 
+        // Intentar obtener específicamente la gestión 'Gestión 1-2025'
+        $gestionDeseada = Gestion::where('nombre', 'Gestión 1-2025')->first();
+
         if (empty($carreras) || empty($gestiones)) {
             return;
         }
@@ -65,7 +68,7 @@ class PostulanteSeeder extends Seeder
                 'carrera2_id' => $c2,
                 'pago_confirmado' => 'FALSO',
                 'estado_inscripcion' => 'PENDIENTE_PAGO',
-                'gestion_id' => $gestiones[array_rand($gestiones)],
+                'gestion_id' => $gestionDeseada ? $gestionDeseada->id : $gestiones[array_rand($gestiones)],
             ]);
 
             $user = User::create([

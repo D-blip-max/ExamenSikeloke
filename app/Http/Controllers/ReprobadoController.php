@@ -13,7 +13,7 @@ class ReprobadoController extends Controller
     public function index()
     {
         $reprobados = Reprobado::with('postulante')->get();
-        $postulantes = Postulante::all();
+        $postulantes = Postulante::orderBy('apellidos')->orderBy('nombres')->get();
 
         return view('admin.reprobados.index', compact('reprobados', 'postulantes'));
     }

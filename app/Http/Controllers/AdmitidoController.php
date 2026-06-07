@@ -16,7 +16,7 @@ class AdmitidoController extends Controller
     public function index()
     {
         $admitidos = Admitido::with(['postulante', 'carrera'])->get();
-        $postulantes = Postulante::all();
+        $postulantes = Postulante::orderBy('apellidos')->orderBy('nombres')->get();
         return view('admin.admitidos.index', compact('admitidos', 'postulantes'));
     }
 

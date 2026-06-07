@@ -19,7 +19,7 @@ class NotaController extends Controller
     public function index()
     {
         $notas = Nota::with(['postulante', 'materia', 'configExamen'])->get();
-        $postulantes = Postulante::all();
+        $postulantes = Postulante::orderBy('apellidos')->orderBy('nombres')->get();
         $materias = Materia::all();
         $configPorcentajes = ConfigPorcentaje::all();
 

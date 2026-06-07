@@ -13,7 +13,7 @@ class PagoController extends Controller
     public function index()
     {
         $pagos = Pago::with('postulante')->get();
-        $postulantes = Postulante::orderBy('nombres')->orderBy('apellidos')->get();
+        $postulantes = Postulante::orderBy('apellidos')->orderBy('nombres')->get();
 
         return view('admin.pagos.index', compact('pagos', 'postulantes'));
     }

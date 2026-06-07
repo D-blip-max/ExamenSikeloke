@@ -16,7 +16,7 @@ class PostGrupoController extends Controller
         Grupo::ensureAutoGroups();
 
         $postGrupos = PostGrupo::with(['postulante', 'grupo'])->get();
-        $postulantes = Postulante::orderBy('nombres')->orderBy('apellidos')->get();
+        $postulantes = Postulante::orderBy('apellidos')->orderBy('nombres')->get();
         $grupos = Grupo::orderBy('nombre')->get();
 
         return view('admin.post_grupos.index', compact('postGrupos', 'postulantes', 'grupos'));
