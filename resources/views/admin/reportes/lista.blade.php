@@ -12,6 +12,7 @@
             <div>
                 <a href="{{ url('admin/reportes/export/' . ($tipo ?? 'lista') . '?format=csv') }}" class="btn btn-sm btn-outline-primary">Exportar CSV</a>
                 <a href="{{ url('admin/reportes/export/' . ($tipo ?? 'lista') . '?format=pdf') }}" class="btn btn-sm btn-outline-secondary">Exportar PDF</a>
+                <a href="{{ url('admin/reportes') }}" class="btn btn-sm btn-outline-dark">Volver</a>
             </div>
         </div>
         <div class="card-body">

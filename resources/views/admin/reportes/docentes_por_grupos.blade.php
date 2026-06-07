@@ -7,8 +7,13 @@
 
 @section('content')
     <div class="card card-outline card-primary">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title">Docentes por grupos</h3>
+            <div>
+                <a href="{{ url('admin/reportes/export/' . ($tipo ?? 'docentes_por_grupos') . '?format=csv') }}" class="btn btn-sm btn-outline-primary">Exportar CSV</a>
+                <a href="{{ url('admin/reportes/export/' . ($tipo ?? 'docentes_por_grupos') . '?format=pdf') }}" class="btn btn-sm btn-outline-secondary">Exportar PDF</a>
+                <a href="{{ url('admin/reportes') }}" class="btn btn-sm btn-outline-dark">Volver</a>
+            </div>
         </div>
         <div class="card-body">
             @foreach($asignaciones as $grupoId => $items)
