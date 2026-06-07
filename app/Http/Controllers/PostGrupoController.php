@@ -16,11 +16,21 @@ class PostGrupoController extends Controller
         Grupo::ensureAutoGroups();
 
         $postGrupos = PostGrupo::with(['postulante', 'grupo'])->get();
+        $postGruposByGrupo = $postGrupos
+            ->groupBy('grupo_id')
+            ->sortBy(function ($group) {
+                return $group->first()->grupo->nombre ?? '';
+            })
+            ->map(function ($group) {
+                return $group->sortBy(function ($postGrupo) {
+                    return ($postGrupo->postulante->apellidos ?? '') . ' ' . ($postGrupo->postulante->nombres ?? '');
+                })->values();
+            });
+
         $postulantes = Postulante::orderBy('apellidos')->orderBy('nombres')->get();
         $grupos = Grupo::orderBy('nombre')->get();
 
-        return view('admin.post_grupos.index', compact('postGrupos', 'postulantes', 'grupos'));
-    }
+        return view('admin.post_grupos.index', compact('postGruposByGrupo', 'postulantes', 'grupos'));    }
 
     public function store(Request $request)
     {

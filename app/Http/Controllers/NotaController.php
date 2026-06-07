@@ -21,7 +21,29 @@ class NotaController extends Controller
         $notas = Nota::with(['postulante', 'materia', 'configExamen'])->get();
         $postulantes = Postulante::orderBy('apellidos')->orderBy('nombres')->get();
         $materias = Materia::all();
-        $configPorcentajes = ConfigPorcentaje::all();
+        $configPorcentajes = ConfigPorcentaje::orderBy('id')->get();
+
+        $postulantesRegistrables = [];
+        foreach ($postulantes as $postulante) {
+            $countNotas = Nota::where('postulante_id', $postulante->id)->count();
+            if ($countNotas >= 12) {
+                continue;
+            }
+
+            $etapa = $this->obtenerEtapaNotaPostulante($postulante);
+            if (!$etapa || empty($etapa['materias'])) {
+                continue;
+            }
+
+            $postulantesRegistrables[] = [
+                'id' => $postulante->id,
+                'nombre' => $postulante->nombres . ' ' . $postulante->apellidos,
+                'exam_id' => $etapa['exam']->id,
+                'exam_label' => $etapa['exam']->numero_examen,
+                'exam_ponderacion' => $etapa['exam']->ponderacion,
+                'materias' => $etapa['materias'],
+            ];
+        }
 
         $promediosPorMateria = Nota::selectRaw('notas.postulante_id, notas.materia_id, SUM(notas.nota * config_porcentaje.ponderacion / 100) as promedio')
             ->join('config_porcentaje', 'notas.config_examen_id', '=', 'config_porcentaje.id')
@@ -42,7 +64,7 @@ class NotaController extends Controller
             $resumenPostulantes[$postulanteId]['estado'] = $promedioFinal >= 60 ? 'APROBADO' : 'REPROBADO';
         }
 
-        return view('admin.notas.index', compact('notas', 'postulantes', 'materias', 'configPorcentajes', 'resumenPostulantes'));
+        return view('admin.notas.index', compact('notas', 'postulantes', 'materias', 'configPorcentajes', 'resumenPostulantes', 'postulantesRegistrables'));
     }
 
     public function store(Request $request)
@@ -106,6 +128,35 @@ class NotaController extends Controller
                 ->withInput()
                 ->with('modal_id', null)
                 ->with('mensaje', 'Ya existe una nota para ese examen en esa materia')
+                ->with('icono', 'error');
+        }
+
+        $etapa = $this->obtenerEtapaNotaPostulante($postulante);
+        if (!$etapa) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('modal_id', null)
+                ->with('mensaje', 'El postulante ya tiene las 12 notas registradas o no puede registrar más notas por etapa.')
+                ->with('icono', 'error');
+        }
+
+        if ($request->config_examen_id_create != $etapa['exam']->id) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('modal_id', null)
+                ->with('mensaje', 'Debe registrar primero ' . $etapa['exam_label'] . ' para este postulante.')
+                ->with('icono', 'error');
+        }
+
+        $materiasPermitidas = collect($etapa['materias'])->pluck('id')->all();
+        if (!in_array($request->materia_id_create, $materiasPermitidas)) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('modal_id', null)
+                ->with('mensaje', 'La materia seleccionada no está disponible para este parcial.')
                 ->with('icono', 'error');
         }
 
@@ -234,6 +285,66 @@ class NotaController extends Controller
         return redirect()->route('admin.notas.index')
             ->with('mensaje', 'La nota se ha eliminado correctamente')
             ->with('icono', 'success');
+    }
+
+    private function obtenerEtapaNotaPostulante(Postulante $postulante)
+    {
+        $materias = Materia::all();
+        $configPorcentajes = ConfigPorcentaje::orderBy('id')->get();
+
+        if ($configPorcentajes->count() < 3 || $materias->count() === 0) {
+            return null;
+        }
+
+        $primerParcial = $configPorcentajes[0];
+        $segundoParcial = $configPorcentajes[1];
+        $tercerParcial = $configPorcentajes[2];
+        $totalMaterias = $materias->count();
+
+        $countPrimerParcial = Nota::where('postulante_id', $postulante->id)
+            ->where('config_examen_id', $primerParcial->id)
+            ->distinct('materia_id')
+            ->count('materia_id');
+
+        $countSegundoParcial = Nota::where('postulante_id', $postulante->id)
+            ->where('config_examen_id', $segundoParcial->id)
+            ->distinct('materia_id')
+            ->count('materia_id');
+
+        $countTercerParcial = Nota::where('postulante_id', $postulante->id)
+            ->where('config_examen_id', $tercerParcial->id)
+            ->distinct('materia_id')
+            ->count('materia_id');
+
+        if ($countPrimerParcial < $totalMaterias) {
+            $etapa = $primerParcial;
+        } elseif ($countSegundoParcial < $totalMaterias) {
+            $etapa = $segundoParcial;
+        } elseif ($countTercerParcial < $totalMaterias) {
+            $etapa = $tercerParcial;
+        } else {
+            return null;
+        }
+
+        $materiasDisponibles = [];
+        foreach ($materias as $materia) {
+            $tieneNota = Nota::where('postulante_id', $postulante->id)
+                ->where('materia_id', $materia->id)
+                ->where('config_examen_id', $etapa->id)
+                ->exists();
+
+            if (!$tieneNota) {
+                $materiasDisponibles[] = [
+                    'id' => $materia->id,
+                    'nombre' => $materia->nombre,
+                ];
+            }
+        }
+
+        return [
+            'exam' => $etapa,
+            'materias' => $materiasDisponibles,
+        ];
     }
 
     // Método helper para verificar si se completaron 12 notas y procesar automáticamente
