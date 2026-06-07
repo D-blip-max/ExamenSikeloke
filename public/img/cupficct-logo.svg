@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" role="img" aria-labelledby="title">
+  <title>Cup-Ficct Logo</title>
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#21409a"/>
+      <stop offset="100%" stop-color="#3da5f5"/>
+    </linearGradient>
+  </defs>
+  <rect width="280" height="80" rx="18" ry="18" fill="#ffffff"/>
+  <circle cx="42" cy="40" r="28" fill="url(#grad)"/>
+  <path d="M28 55 L28 25 L46 25 Q56 25 56 36 Q56 47 46 47 L34 47" stroke="#ffffff" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M40 45 L56 45 Q64 45 64 37 Q64 29 56 29 L44 29" stroke="#ffffff" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <text x="90" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#21409a">Cup-</text>
+  <text x="210" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#3da5f5">Ficct</text>
+</svg>
