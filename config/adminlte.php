@@ -300,7 +300,7 @@ return [
 
     'menu' => [
         // =============================================
-        // PAQUETE 2: Gestión de Personal y Usuarios
+        // PAQUETE 1: Gestión de Segurdad y GestionAcademica
         // =============================================
         [
 
@@ -308,13 +308,6 @@ return [
             'icon'    => 'fas fa-fw fa-users',
             'classes' => 'bg-dark text-white',
             'submenu' => [
-                [
-                    'can'     => 'admin.bitacora.index',
-                    'text'    => 'CU5 · Visualizar Bitácora',
-                    'url'     => 'admin/bitacora',
-                    'icon'    => 'fas fa-fw fa-book',
-                    'classes' => 'bg-blue text-white',
-                ],
                 [
                     'can'     => 'admin.password.change',
                     'text'    => 'CU03 · Cambiar Contraseña',
@@ -329,6 +322,13 @@ return [
                     'icon'    => 'fas fa-fw fa-user-shield',
                     'classes' => 'bg-blue text-white',
                 ],
+                [
+                    'can'     => 'admin.bitacora.index',
+                    'text'    => 'CU5 · Visualizar Bitácora',
+                    'url'     => 'admin/bitacora',
+                    'icon'    => 'fas fa-fw fa-book',
+                    'classes' => 'bg-blue text-white',
+                ],
             ],
         ],
         // =============================================
@@ -341,31 +341,17 @@ return [
             'classes' => 'bg-dark text-white',
             'submenu' => [
                 [
-                    'can'     => 'admin.grupos.index',
-                    'text'    => 'CU21 · Gestionar Grupos',
-                    'url'     => 'admin/grupos',
-                    'icon'    => 'fas fa-fw fa-users-cog',
-                    'classes' => 'bg-blue text-white',
-                ],
-                [
-                    'can'     => 'admin.post_grupos.index',
-                    'text'    => 'CU26 · Asignar Postulantes a Grupo',
-                    'url'     => 'admin/post_grupos',
-                    'icon'    => 'fas fa-fw fa-user-tag',
-                    'classes' => 'bg-blue text-white',
-                ],
-                [
-                    'can'     => 'admin.asignaciones.index',
-                    'text'    => 'CU27 · Asignar Docente a Grupos',
-                    'url'     => 'admin/asignaciones',
-                    'icon'    => 'fas fa-fw fa-user-tie',
-                    'classes' => 'bg-blue text-white',
-                ],
-                [
                     'can'     => 'admin.carreras.index',
                     'text'    => 'CU11 · Gestionar Carreras',
                     'url'     => 'admin/carreras',
                     'icon'    => 'fas fa-fw fa-graduation-cap',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
+                    'can'     => 'admin.grupos.index',
+                    'text'    => 'CU12 · Gestionar Grupos',
+                    'url'     => 'admin/grupos',
+                    'icon'    => 'fas fa-fw fa-users-cog',
                     'classes' => 'bg-blue text-white',
                 ],
                 [
@@ -383,10 +369,31 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.docentes.index',
+                    'text'    => 'CU15 · Gestionar Docentes',
+                    'url'     => 'admin/docentes',
+                    'icon'    => 'fas fa-fw fa-user-tie',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
+                    'can'     => 'admin.asignaciones.index',
+                    'text'    => 'CU16 · Asignar Docente a Grupos',
+                    'url'     => 'admin/asignaciones',
+                    'icon'    => 'fas fa-fw fa-user-tie',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.config_porcentajes.index',
                     'text'    => 'CU17 · Configurar Porcentajes de Evaluación',
                     'url'     => 'admin/config-porcentajes',
                     'icon'    => 'fas fa-fw fa-percentage',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
+                    'can'     => 'admin.post_grupos.index',
+                    'text'    => 'CU26 · Asignar Postulantes a Grupo',
+                    'url'     => 'admin/post_grupos',
+                    'icon'    => 'fas fa-fw fa-user-tag',
                     'classes' => 'bg-blue text-white',
                 ],
                 [
@@ -417,13 +424,16 @@ return [
                     'icon'    => 'fas fa-fw fa-book-open',
                     'classes' => 'bg-blue text-white',
                 ],
-                [
-                    'can'     => 'admin.docentes.index',
-                    'text'    => 'CU15 · Gestionar Docentes',
-                    'url'     => 'admin/docentes',
-                    'icon'    => 'fas fa-fw fa-user-tie',
-                    'classes' => 'bg-blue text-white',
-                ],
+            ],
+        ],
+        // =============================================
+        // PAQUETE 3: Proceso de Admisión
+        // =============================================
+        [
+            'text'    => 'Paquete 3: Proceso de Admisión',
+            'icon'    => 'fas fa-fw fa-file-signature',
+            'classes' => 'bg-dark text-white',
+            'submenu' => [
                 [
                     'can'     => 'admin.postulantes.index',
                     'text'    => 'CU07 · Gestionar Postulantes',
@@ -438,13 +448,6 @@ return [
                     'icon'    => 'fas fa-fw fa-file-invoice-dollar',
                     'classes' => 'bg-blue text-white',
                 ],
-            ],
-        ],
-        [
-            'text'    => 'Paquete 3: Proceso de Admisión',
-            'icon'    => 'fas fa-fw fa-file-signature',
-            'classes' => 'bg-dark text-white',
-            'submenu' => [
                 [
                     'can'     => 'admin.notas.index',
                     'text'    => 'CU18 · Registrar Calificaciones',
@@ -475,6 +478,9 @@ return [
                 ],
             ],
         ],
+        // =============================================
+        // PAQUETE 4: Reportes
+        // =============================================
         [
             'text'    => 'Paquete 4: Reportes',
             'icon'    => 'fas fa-fw fa-chart-bar',
