@@ -444,10 +444,10 @@ return [
             ],
         ],
         // =============================================
-        // PAQUETE 4: Reportes
+        // PAQUETE 4: Planificacion Academica y Reportes
         // =============================================
         [
-            'text'    => 'Paquete 4: Reportes',
+            'text'    => 'Paquete 4: Planificacion Academica y Reportes',
             'icon'    => 'fas fa-fw fa-chart-bar',
             'classes' => 'bg-dark text-white',
             'submenu' => [

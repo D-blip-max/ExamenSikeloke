@@ -191,7 +191,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-
+                    <div class="table-responsive">
                     <table id="docentesTable" class="table table-bordered table-striped table-hover table-sm">
                         <thead>
                             <tr>
@@ -435,6 +435,7 @@
                             @endforelse
                         </tbody>
                     </table>
+                    </div>
 
                 </div>
             </div>

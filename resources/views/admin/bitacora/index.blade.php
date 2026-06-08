@@ -12,6 +12,7 @@
                     <h3 class="card-title">Actividades Registradas</h3>
                 </div>
                 <div class="card-body">
+                <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
