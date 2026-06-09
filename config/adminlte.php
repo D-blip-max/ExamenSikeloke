@@ -369,6 +369,13 @@ return [
                     'classes' => 'bg-blue text-white',
                 ],
                 [
+                    'can'     => 'admin.users.index',
+                    'text'    => 'CU06 · Gestionar Usuarios',
+                    'url'     => 'admin/users',
+                    'icon'    => 'fas fa-fw fa-user-cog',
+                    'classes' => 'bg-blue text-white',
+                ],
+                [
                     'can'     => 'admin.docentes.index',
                     'text'    => 'CU15 · Gestionar Docentes',
                     'url'     => 'admin/docentes',

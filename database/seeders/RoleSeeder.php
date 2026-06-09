@@ -45,6 +45,11 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.roles.permisos'])->syncRoles($admin);
         Permission::create(['name' => 'admin.roles.update_permisos'])->syncRoles($admin);
 
+        // --- PERMISOS PARA USUARIOS CRUD---
+        Permission::create(['name' => 'admin.users.index'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.users.create'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.users.update'])->syncRoles($admin);
+        Permission::create(['name' => 'admin.users.destroy'])->syncRoles($admin);
 
         // --- PERMISOS PARA GRUPOS CRUD---
         Permission::create(['name' => 'admin.grupos.index'])->syncRoles($admin);

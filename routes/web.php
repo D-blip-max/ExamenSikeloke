@@ -41,6 +41,13 @@ Route::get('/admin/roles/{id}/permisos', [App\Http\Controllers\RoleController::c
 Route::post('/admin/roles/{id}', [App\Http\Controllers\RoleController::class, 'update_permisos'])->name('admin.roles.update_permisos')->middleware('auth','can:admin.roles.update_permisos');//el que da permisos che
 
 
+// rutas para gestionar usuarios del sistema CreateReadUpdateDelete
+// Trabajando con Modales
+Route::get('/admin/users', [App\Http\Controllers\UserController::class, 'index'])->name('admin.users.index')->middleware('auth','can:admin.users.index');
+Route::post('/admin/users/create', [App\Http\Controllers\UserController::class, 'store'])->name('admin.users.create')->middleware('auth','can:admin.users.create');
+Route::put('/admin/users/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('admin.users.update')->middleware('auth','can:admin.users.update');
+Route::delete('/admin/users/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('admin.users.destroy')->middleware('auth','can:admin.users.destroy');
+
 
 //rutas que van a ser de grupos del sitema CreateReadUpdateDelete
 //Trabajando con Modals
