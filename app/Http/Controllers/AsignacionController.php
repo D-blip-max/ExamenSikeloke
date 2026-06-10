@@ -25,7 +25,7 @@ class AsignacionController extends Controller
             })
             ->map(function ($group) {
                 return $group->sortBy(function ($a) {
-                    return $a->materia->nombre ?? '';
+                    return sprintf('%s %s', $a->horario->horaInicio ?? '', $a->horario->horaFin ?? '');
                 })->values();
             });
 

@@ -54,8 +54,8 @@ class DatabaseSeeder extends Seeder
 
         // Grupos con capacidad para 280 postulantes distribuidos en 4 grupos
         Grupo::create(['nombre' => 'Grupo 1', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
-        Grupo::create(['nombre' => 'Grupo 2', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
-        Grupo::create(['nombre' => 'Grupo 3', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
+        Grupo::create(['nombre' => 'Grupo 2', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 2]);
+        Grupo::create(['nombre' => 'Grupo 3', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 3]);
         Grupo::create(['nombre' => 'Grupo 4', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
         //horario Seeder
 
