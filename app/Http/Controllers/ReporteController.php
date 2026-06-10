@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Postulante;
 use App\Models\Asignacion;
 use App\Models\PostGrupo;
@@ -18,6 +19,44 @@ class ReporteController extends Controller
     public function index()
     {
         return view('admin.reportes.index');
+    }
+
+    public function datosTabla(Request $request)
+    {
+        $tables = [
+            'users' => 'Usuarios',
+            'grupos' => 'Grupos',
+            'aulas' => 'Aulas',
+            'carreras' => 'Carreras',
+            'horarios' => 'Horarios',
+            'dias' => 'Días',
+            'gestiones' => 'Gestiones',
+            'materias' => 'Materias',
+            'turnos' => 'Turnos',
+            'docentes' => 'Docentes',
+            'postulantes' => 'Postulantes',
+            'pagos' => 'Pagos',
+            'notas' => 'Notas',
+            'admitidos' => 'Admitidos',
+            'reprobados' => 'Reprobados',
+            'post_grupos' => 'Post Grupos',
+        ];
+
+        $selectedTable = $request->query('table', array_key_first($tables));
+        if (!isset($tables[$selectedTable])) {
+            $selectedTable = array_key_first($tables);
+        }
+
+        $columns = Schema::getColumnListing($selectedTable);
+        $selectedColumns = $request->query('columns', $columns);
+        $selectedColumns = array_values(array_intersect($selectedColumns, $columns));
+        if (empty($selectedColumns)) {
+            $selectedColumns = $columns;
+        }
+
+        $rows = DB::table($selectedTable)->select($selectedColumns)->get();
+
+        return view('admin.reportes.datos_tabla', compact('tables', 'selectedTable', 'columns', 'selectedColumns', 'rows'))->with('tipo', 'datos_tabla');
     }
 
     public function generar(Request $request, $tipo)

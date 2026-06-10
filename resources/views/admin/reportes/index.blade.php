@@ -13,6 +13,7 @@
         <div class="card-body">
             <div class="list-group">
                 <a href="{{ url('admin/reportes/generar/lista') }}" class="list-group-item list-group-item-action">Lista general de postulantes</a>
+                <a href="{{ url('admin/reportes/generar/datos_tabla') }}" class="list-group-item list-group-item-action">Datos por Tabla</a>
                 <a href="{{ url('admin/reportes/generar/aprobados') }}" class="list-group-item list-group-item-action">Postulantes aprobados (>=60)</a>
                 <a href="{{ url('admin/reportes/generar/reprobados') }}" class="list-group-item list-group-item-action">Postulantes reprobados (&lt;60)</a>
                 <a href="{{ url('admin/reportes/generar/promedios') }}" class="list-group-item list-group-item-action">Promedios generales</a>

@@ -174,6 +174,7 @@ use App\Http\Controllers\ReporteController;
 
 Route::prefix('admin/reportes')->group(function () {
     Route::get('/', [ReporteController::class, 'index'])->name('admin.reportes.index')->middleware('auth','can:admin.reportes.index');
+    Route::get('generar/datos_tabla', [ReporteController::class, 'datosTabla'])->name('admin.reportes.datos_tabla')->middleware('auth','can:admin.reportes.tabla');
     Route::get('generar/{tipo}', [ReporteController::class, 'generar'])->name('admin.reportes.generar')->middleware('auth','can:admin.reportes.index');
     Route::get('export/{tipo}', [ReporteController::class, 'export'])->name('admin.reportes.export')->middleware('auth','can:admin.reportes.index');
 });
