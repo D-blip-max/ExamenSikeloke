@@ -382,6 +382,29 @@ class NotaController extends Controller
 
         $promedioFinal = round($promedios->avg('promedio'), 2);
 
+        // Si al menos un examen es menor a 60, registrar como reprobado
+        $notaBaja = Nota::where('postulante_id', $postulanteId)
+            ->where('nota', '<', 60)
+            ->exists();
+
+        if ($notaBaja) {
+            Reprobado::create([
+                'postulante_id' => $postulanteId,
+                'promedio_final' => $promedioFinal,
+                'motivo' => 'NOTA INSUFICIENTE EN EXAMEN',
+                'detalle' => "Al menos un examen con nota inferior a 60. Promedio final {$promedioFinal}",
+                'fecha_registro' => now()->format('Y-m-d'),
+            ]);
+
+            Bitacora::create([
+                'user_id' => auth()->user()->id,
+                'accion' => "Se registró automáticamente como reprobado al postulante {$postulanteId} por examen desaprobado con promedio {$promedioFinal}",
+                'hora' => now('America/La_Paz'),
+            ]);
+
+            return;
+        }
+
         // Si promedio < 60, registrar como reprobado
         if ($promedioFinal < 60) {
             Reprobado::create([

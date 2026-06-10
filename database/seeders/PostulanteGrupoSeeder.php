@@ -14,20 +14,28 @@ class PostulanteGrupoSeeder extends Seeder
      */
     public function run(): void
     {
-        $grupo = Grupo::first();
-        if (! $grupo) {
+        $grupos = Grupo::orderBy('id')->take(4)->get();
+        if ($grupos->count() < 4) {
             return;
         }
 
         $postulantes = Postulante::all();
-        foreach ($postulantes as $postulante) {
+        if ($postulantes->isEmpty()) {
+            return;
+        }
+
+        $grupoIndex = 0;
+        foreach ($postulantes as $index => $postulante) {
+            $grupo = $grupos[floor($index / 70)];
             PostGrupo::updateOrCreate(
                 ['postulante_id' => $postulante->id],
                 ['grupo_id' => $grupo->id]
             );
         }
 
-        $grupo->inscritos = $postulantes->count();
-        $grupo->save();
+        foreach ($grupos as $grupo) {
+            $grupo->inscritos = PostGrupo::where('grupo_id', $grupo->id)->count();
+            $grupo->save();
+        }
     }
 }

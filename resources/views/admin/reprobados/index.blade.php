@@ -9,12 +9,23 @@
     <div class="row">
         <div class="col-md-12 mb-3">
             <div class="card card-outline card-danger">
-                <div class="card-header">
-                    <h3 class="card-title">Reprobados</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCreate">
-                            Registrar reprobado
-                        </button>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="card-title">Reprobados</h3>
+                        <p class="text-muted mb-0">Listado de postulantes marcados como reprobados</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="input-group input-group-sm mr-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input type="text" id="searchInputReprobados" class="form-control" placeholder="Buscar...">
+                        </div>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCreate">
+                                Registrar reprobado
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -33,7 +44,7 @@
                         </thead>
                         <tbody>
                             @foreach ($reprobados as $reprobado)
-                                <tr>
+                                <tr data-search="{{ strtolower($reprobado->postulante->nombres . ' ' . $reprobado->postulante->apellidos . ' ' . ($reprobado->postulante->ci ?? '') . ' ' . $reprobado->motivo . ' ' . $reprobado->detalle) }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $reprobado->postulante->nombres }} {{ $reprobado->postulante->apellidos }}</td>
                                     <td>{{ number_format($reprobado->promedio_final, 2) }}</td>
@@ -167,4 +178,19 @@
             });
         </script>
     @endif
+
+    <script>
+        (function(){
+            const input = document.getElementById('searchInputReprobados');
+            if (!input) return;
+            const rows = Array.from(document.querySelectorAll('table tbody tr'));
+            input.addEventListener('input', function(){
+                const v = this.value.toLowerCase().trim();
+                rows.forEach(r => {
+                    const s = r.dataset.search || '';
+                    r.style.display = s.includes(v) ? '' : 'none';
+                });
+            });
+        })();
+    </script>
 @stop

@@ -62,6 +62,21 @@ class NotaSeeder extends Seeder
         Admitido::where('postulante_id', $postulante->id)->delete();
         Reprobado::where('postulante_id', $postulante->id)->delete();
 
+        $notaBaja = Nota::where('postulante_id', $postulante->id)
+            ->where('nota', '<', 60)
+            ->exists();
+
+        if ($notaBaja) {
+            Reprobado::create([
+                'postulante_id' => $postulante->id,
+                'promedio_final' => $promedioFinal,
+                'motivo' => 'NOTA INSUFICIENTE EN EXAMEN',
+                'detalle' => "Al menos un examen con nota inferior a 60. Promedio final {$promedioFinal}",
+                'fecha_registro' => now()->format('Y-m-d'),
+            ]);
+            return;
+        }
+
         if ($promedioFinal < 60) {
             Reprobado::create([
                 'postulante_id' => $postulante->id,
@@ -76,21 +91,42 @@ class NotaSeeder extends Seeder
         $carrera1 = Carrera::find($postulante->carrera1_id);
         $carrera2 = Carrera::find($postulante->carrera2_id);
 
-        if ($carrera1 && $promedioFinal >= ($carrera1->nota_minima ?? 60)) {
+        $alternativa = Carrera::where('cupo_disponible', '>', 0)
+            ->where('nota_minima', '<=', $promedioFinal)
+            ->whereNotIn('id', array_filter([$postulante->carrera1_id, $postulante->carrera2_id]))
+            ->orderBy('nota_minima', 'asc')
+            ->first();
+
+        if ($carrera1 && $promedioFinal >= ($carrera1->nota_minima ?? 60) && $carrera1->cupo_disponible > 0) {
             $this->crearAdmitido($postulante->id, $carrera1->id, '1RA OPCIÓN', $promedioFinal);
             return;
         }
 
-        if ($carrera2 && $promedioFinal >= ($carrera2->nota_minima ?? 60)) {
+        if ($carrera2 && $promedioFinal >= ($carrera2->nota_minima ?? 60) && $carrera2->cupo_disponible > 0) {
             $this->crearAdmitido($postulante->id, $carrera2->id, '2DA OPCIÓN', $promedioFinal);
+            return;
+        }
+
+        if ($alternativa) {
+            $this->crearAdmitido($postulante->id, $alternativa->id, 'ALTERNATIVA', $promedioFinal);
+            return;
+        }
+
+        if ($carrera2) {
+            $this->crearAdmitido($postulante->id, $carrera2->id, '2DA OPCIÓN (SIN CUPO)', $promedioFinal);
+            return;
+        }
+
+        if ($carrera1) {
+            $this->crearAdmitido($postulante->id, $carrera1->id, '1RA OPCIÓN (SIN CUPO)', $promedioFinal);
             return;
         }
 
         Reprobado::create([
             'postulante_id' => $postulante->id,
             'promedio_final' => $promedioFinal,
-            'motivo' => 'NO CUMPLE OPCIONES',
-            'detalle' => "Promedio final {$promedioFinal} suficiente, pero no alcanza ninguna opción de carrera",
+            'motivo' => 'NO HAY OPCIONES DISPONIBLES',
+            'detalle' => "Promedio final {$promedioFinal} suficiente, pero no hay carreras disponibles.",
             'fecha_registro' => now()->format('Y-m-d'),
         ]);
     }

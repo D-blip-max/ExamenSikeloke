@@ -42,7 +42,7 @@ class PostulanteSeeder extends Seeder
             return;
         }
 
-        for ($i = 1; $i <= 70; $i++) {
+        for ($i = 1; $i <= 280; $i++) {
             $n = $nombres[array_rand($nombres)];
             $a = $apellidos[array_rand($apellidos)];
 

@@ -9,12 +9,23 @@
     <div class="row">
         <div class="col-md-12 mb-3">
             <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Admitidos</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalAssign">
-                            Asignar carrera a postulante
-                        </button>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="card-title">Admitidos</h3>
+                        <p class="text-muted mb-0">Listado de postulantes admitidos</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="input-group input-group-sm mr-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input type="text" id="searchInputAdmitidos" class="form-control" placeholder="Buscar...">
+                        </div>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalAssign">
+                                Asignar carrera a postulante
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -33,7 +44,7 @@
                         </thead>
                         <tbody>
                             @foreach ($admitidos as $admitido)
-                                <tr @if ($admitido->opcion_asignada == 'PENDIENTE') style="background-color: #fff3cd;" @endif>
+                                <tr data-search="{{ strtolower($admitido->postulante->nombres . ' ' . $admitido->postulante->apellidos . ' ' . ($admitido->postulante->ci ?? '') . ' ' . ($admitido->carrera->nombre ?? '') . ' ' . $admitido->opcion_asignada) }}" @if ($admitido->opcion_asignada == 'PENDIENTE') style="background-color: #fff3cd;" @endif>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $admitido->postulante->nombres }} {{ $admitido->postulante->apellidos }}</td>
                                     <td>
@@ -114,5 +125,20 @@
             });
         </script>
     @endif
+
+    <script>
+        (function(){
+            const input = document.getElementById('searchInputAdmitidos');
+            if (!input) return;
+            const rows = Array.from(document.querySelectorAll('table tbody tr'));
+            input.addEventListener('input', function(){
+                const v = this.value.toLowerCase().trim();
+                rows.forEach(r => {
+                    const s = r.dataset.search || '';
+                    r.style.display = s.includes(v) ? '' : 'none';
+                });
+            });
+        })();
+    </script>
 
 @stop

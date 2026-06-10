@@ -52,9 +52,11 @@ class DatabaseSeeder extends Seeder
         Turno::create(['nombre' => 'Tarde']);
         Turno::create(['nombre' => 'Noche']);
 
-        //Gupo seeder
-    
+        // Grupos con capacidad para 280 postulantes distribuidos en 4 grupos
         Grupo::create(['nombre' => 'Grupo 1', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
+        Grupo::create(['nombre' => 'Grupo 2', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
+        Grupo::create(['nombre' => 'Grupo 3', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
+        Grupo::create(['nombre' => 'Grupo 4', 'cupo_maximo' => 70, 'inscritos' => 0, 'turno_id' => 1]);
         //horario Seeder
 
         Horario::create(['horaInicio' => '07:00', 'horaFin' => '07:45']);

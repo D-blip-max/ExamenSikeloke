@@ -56,6 +56,30 @@ class AdmitidoController extends Controller
 
         $promedioFinal = round($promedios->avg('promedio'), 2);
 
+        // Paso 2a: si al menos un examen es menor a 60 -> reprobado
+        $notaBaja = Nota::where('postulante_id', $postulante_id)
+            ->where('nota', '<', 60)
+            ->exists();
+
+        if ($notaBaja) {
+            if (!Reprobado::where('postulante_id', $postulante_id)->exists()) {
+                Reprobado::create([
+                    'postulante_id' => $postulante_id,
+                    'promedio_final' => $promedioFinal,
+                    'motivo' => 'NOTA INSUFICIENTE EN EXAMEN',
+                    'detalle' => "Al menos un examen con nota inferior a 60. Promedio final {$promedioFinal}",
+                    'fecha_registro' => now()->format('Y-m-d'),
+                ]);
+
+                Bitacora::create([
+                    'user_id' => auth()->user()->id,
+                    'accion' => 'Se registró reprobado por examen desaprobado para el postulante ' . $postulante_id,
+                    'hora' => now('America/La_Paz'),
+                ]);
+            }
+            return redirect()->route('admin.reprobados.index')->with('mensaje', "El postulante reprobó porque al menos un examen tiene nota menor a 60. Promedio {$promedioFinal}.")->with('icono', 'error');
+        }
+
         // Paso 2: si promedio_final < 60 -> reprobado
         if ($promedioFinal < 60) {
             if (!Reprobado::where('postulante_id', $postulante_id)->exists()) {

@@ -10,6 +10,8 @@ use App\Models\PostGrupo;
 use App\Models\Materia;
 use App\Models\Grupo;
 use App\Models\Bitacora;
+use App\Models\Admitido;
+use App\Models\Reprobado;
 
 class ReporteController extends Controller
 {
@@ -26,22 +28,32 @@ class ReporteController extends Controller
                 return view('admin.reportes.lista', ['postulantes' => $postulantes, 'tipo' => 'lista']);
 
             case 'aprobados':
-                $aprobados = DB::table('notas')
-                    ->select('postulante_id', DB::raw('AVG(nota) as promedio'))
-                    ->groupBy('postulante_id')
-                    ->havingRaw('AVG(nota) >= ?', [60])
-                    ->pluck('promedio', 'postulante_id');
-
+                // Obtener aprobados desde la tabla Admitido y permitir búsqueda por postulante
+                $aprobQuery = Admitido::with('postulante');
+                if ($request->filled('q')) {
+                    $term = $request->get('q');
+                    $aprobQuery->whereHas('postulante', function ($q) use ($term) {
+                        $q->where('nombres', 'like', "%{$term}%")
+                          ->orWhere('apellidos', 'like', "%{$term}%")
+                          ->orWhere('ci', 'like', "%{$term}%");
+                    });
+                }
+                $aprobados = $aprobQuery->get()->pluck('promedio_final', 'postulante_id');
                 $postulantes = Postulante::whereIn('id', $aprobados->keys())->orderBy('apellidos')->get();
                 return view('admin.reportes.lista', ['postulantes' => $postulantes, 'titulo' => 'Postulantes aprobados', 'promedios' => $aprobados, 'tipo' => 'aprobados']);
 
             case 'reprobados':
-                $reprobados = DB::table('notas')
-                    ->select('postulante_id', DB::raw('AVG(nota) as promedio'))
-                    ->groupBy('postulante_id')
-                    ->havingRaw('AVG(nota) < ?', [60])
-                    ->pluck('promedio', 'postulante_id');
-
+                // Obtener reprobados desde la tabla Reprobado y aplicar filtro de búsqueda si viene q
+                $reprobadosQuery = Reprobado::with('postulante');
+                if ($request->filled('q')) {
+                    $term = $request->get('q');
+                    $reprobadosQuery->whereHas('postulante', function ($q) use ($term) {
+                        $q->where('nombres', 'like', "%{$term}%")
+                          ->orWhere('apellidos', 'like', "%{$term}%")
+                          ->orWhere('ci', 'like', "%{$term}%");
+                    });
+                }
+                $reprobados = $reprobadosQuery->get()->pluck('promedio_final', 'postulante_id');
                 $postulantes = Postulante::whereIn('id', $reprobados->keys())->orderBy('apellidos')->get();
                 return view('admin.reportes.lista', ['postulantes' => $postulantes, 'titulo' => 'Postulantes reprobados', 'promedios' => $reprobados, 'tipo' => 'reprobados']);
 
@@ -85,11 +97,11 @@ class ReporteController extends Controller
                 foreach ($postGrupos as $pg) {
                     $pid = $pg->postulante_id;
                     $gid = $pg->grupo_id;
-                    $prom = DB::table('notas')->where('postulante_id', $pid)->avg('nota');
                     if (!isset($grupos[$gid])) {
                         $grupos[$gid] = ['grupo' => $pg->grupo->nombre ?? 'Grupo '.$gid, 'aprobados' => 0, 'total' => 0];
                     }
-                    if ($prom >= 60) {
+                    // Considerar aprobado si existe entrada en Admitido
+                    if (Admitido::where('postulante_id', $pid)->exists()) {
                         $grupos[$gid]['aprobados']++;
                     }
                     $grupos[$gid]['total']++;
