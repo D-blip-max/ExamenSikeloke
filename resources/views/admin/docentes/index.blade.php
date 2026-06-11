@@ -38,7 +38,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{ url('/admin/docentes/create') }}" method="POST">
+                                        <form id="docenteCreateForm" action="{{ url('/admin/docentes/create') }}" method="POST">
                                             @csrf
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -270,7 +270,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form action="{{ url('/admin/docentes/' . $docente->id) }}" method="POST">
+                                                        <form class="docente-update-form" action="{{ url('/admin/docentes/' . $docente->id) }}" method="POST">
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="row">
@@ -477,6 +477,37 @@
                     $('#ModalCreate').modal('show');
                 @endif
             @endif
+
+            function validateDocenteForm(form) {
+                const maestria = form.querySelector('[name="maestria"]') || form.querySelector('[name="maestria_create"]');
+                const diplomado = form.querySelector('[name="diplomado_edu"]') || form.querySelector('[name="diplomado_edu_create"]');
+                if (!maestria || !diplomado) return true;
+
+                const maestriaVal = maestria.value;
+                const diplomadoVal = diplomado.value;
+                if (maestriaVal !== '1' || diplomadoVal !== '1') {
+                    Swal.fire({
+                        title: 'Validación',
+                        text: 'Para continuar, Maestría y Diplomado Educativo deben ser Sí.',
+                        icon: 'warning',
+                        confirmButtonText: 'Entendido',
+                    });
+                    return false;
+                }
+                return true;
+            }
+
+            $('#docenteCreateForm').on('submit', function(event) {
+                if (!validateDocenteForm(this)) {
+                    event.preventDefault();
+                }
+            });
+
+            $('.docente-update-form').on('submit', function(event) {
+                if (!validateDocenteForm(this)) {
+                    event.preventDefault();
+                }
+            });
         });
     </script>
 @stop
