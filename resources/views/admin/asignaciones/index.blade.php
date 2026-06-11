@@ -183,7 +183,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach($grupoAsignaciones as $asignacion)
-                                                            <tr class="asignacion-row" data-search="{{ strtolower(($asignacion->materia->nombre ?? '') . ' ' . ($asignacion->docente->nombre ?? '') . ' ' . ($grupo->nombre ?? '')) }}" data-grupo-id="{{ $grupoId }}">
+                                                            <tr class="asignacion-row" data-asignacion-id="{{ $asignacion->id }}" data-search="{{ strtolower(($asignacion->materia->nombre ?? '') . ' ' . ($asignacion->docente->nombre ?? '') . ' ' . ($grupo->nombre ?? '')) }}" data-grupo-id="{{ $grupoId }}">
                                                                 <td>{{ $loop->iteration }}</td>
                                                                 <td>{{ $asignacion->materia->nombre ?? '-' }}</td>
                                                                 <td>{{ $asignacion->docente->nombre ?? '-' }}</td>
@@ -239,6 +239,7 @@
                                                                                     <form action="{{ url('/admin/asignaciones/' . $asignacion->id) }}" method="POST">
                                                                                         @csrf
                                                                                         @method('PUT')
+                                                                                        <input type="hidden" name="modal_id" value="{{ $asignacion->id }}">
 
                                                                                         <div class="row">
                                                                                             <div class="col-md-6">
@@ -247,7 +248,7 @@
                                                                                                     <select class="form-control" name="grupo_id" required>
                                                                                                         <option value="">Seleccione...</option>
                                                                                                         @foreach ($grupos as $g)
-                                                                                                            <option value="{{ $g->id }}" {{ old('grupo_id', $asignacion->grupo_id) == $g->id ? 'selected' : '' }}>
+                                                                                                            <option value="{{ $g->id }}" {{ (old('modal_id') == $asignacion->id ? old('grupo_id', $asignacion->grupo_id) : $asignacion->grupo_id) == $g->id ? 'selected' : '' }}>
                                                                                                                 {{ $g->nombre }}
                                                                                                             </option>
                                                                                                         @endforeach
@@ -264,7 +265,7 @@
                                                                                                     <select class="form-control" name="materia_id" required>
                                                                                                         <option value="">Seleccione...</option>
                                                                                                         @foreach ($materias as $mat)
-                                                                                                            <option value="{{ $mat->id }}" {{ old('materia_id', $asignacion->materia_id) == $mat->id ? 'selected' : '' }}>
+                                                                                                            <option value="{{ $mat->id }}" {{ (old('modal_id') == $asignacion->id ? old('materia_id', $asignacion->materia_id) : $asignacion->materia_id) == $mat->id ? 'selected' : '' }}>
                                                                                                                 {{ $mat->nombre }}
                                                                                                             </option>
                                                                                                         @endforeach
@@ -283,7 +284,7 @@
                                                                                                     <select class="form-control" name="docente_id" required>
                                                                                                         <option value="">Seleccione...</option>
                                                                                                         @foreach ($docentes as $doc)
-                                                                                                            <option value="{{ $doc->id }}" {{ old('docente_id', $asignacion->docente_id) == $doc->id ? 'selected' : '' }}>
+                                                                                                            <option value="{{ $doc->id }}" {{ (old('modal_id') == $asignacion->id ? old('docente_id', $asignacion->docente_id) : $asignacion->docente_id) == $doc->id ? 'selected' : '' }}>
                                                                                                                 {{ $doc->nombre }} - {{ $doc->especialidad }}
                                                                                                             </option>
                                                                                                         @endforeach
@@ -300,7 +301,7 @@
                                                                                                     <select class="form-control" name="aula_id" required>
                                                                                                         <option value="">Seleccione...</option>
                                                                                                         @foreach ($aulas as $aul)
-                                                                                                            <option value="{{ $aul->id }}" {{ old('aula_id', $asignacion->aula_id) == $aul->id ? 'selected' : '' }}>
+                                                                                                            <option value="{{ $aul->id }}" {{ (old('modal_id') == $asignacion->id ? old('aula_id', $asignacion->aula_id) : $asignacion->aula_id) == $aul->id ? 'selected' : '' }}>
                                                                                                                 {{ $aul->nombre }}
                                                                                                             </option>
                                                                                                         @endforeach
@@ -319,7 +320,7 @@
                                                                                                     <select class="form-control" name="dia_id" required>
                                                                                                         <option value="">Seleccione...</option>
                                                                                                         @foreach ($dias as $d)
-                                                                                                            <option value="{{ $d->id }}" {{ old('dia_id', $asignacion->dia_id) == $d->id ? 'selected' : '' }}>
+                                                                                                            <option value="{{ $d->id }}" {{ (old('modal_id') == $asignacion->id ? old('dia_id', $asignacion->dia_id) : $asignacion->dia_id) == $d->id ? 'selected' : '' }}>
                                                                                                                 {{ $d->nombre }}
                                                                                                             </option>
                                                                                                         @endforeach
@@ -336,7 +337,7 @@
                                                                                                     <select class="form-control" name="horario_id" required>
                                                                                                         <option value="">Seleccione...</option>
                                                                                                         @foreach ($horarios as $hor)
-                                                                                                            <option value="{{ $hor->id }}" {{ old('horario_id', $asignacion->horario_id) == $hor->id ? 'selected' : '' }}>
+                                                                                                            <option value="{{ $hor->id }}" {{ (old('modal_id') == $asignacion->id ? old('horario_id', $asignacion->horario_id) : $asignacion->horario_id) == $hor->id ? 'selected' : '' }}>
                                                                                                                 {{ $hor->horaInicio }} - {{ $hor->horaFin }}
                                                                                                             </option>
                                                                                                         @endforeach
@@ -405,11 +406,37 @@
             });
 
             @if ($errors->any())
-                @if (session('modal_id'))
-                    $('#ModalUpdate{{ session('modal_id') }}').modal('show');
-                @else
-                    $('#ModalCreate').modal('show');
-                @endif
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const modalId = '{{ old('modal_id') ? old('modal_id') : (session('modal_id') ? session('modal_id') : '') }}';
+                        if (!modalId) {
+                            $('#ModalCreate').modal('show');
+                            return;
+                        }
+
+                        const $row = $(`.asignacion-row[data-asignacion-id="${modalId}"]`);
+                        if ($row.length) {
+                            const grupoId = $row.data('grupo-id');
+                            const $collapse = $(`#collapseAsig${grupoId}`);
+
+                            function showModal() {
+                                $('#ModalUpdate' + modalId).modal('show');
+                            }
+
+                            if (!$collapse.hasClass('show')) {
+                                $collapse.one('shown.bs.collapse', function () {
+                                    showModal();
+                                });
+                                $collapse.collapse('show');
+                            } else {
+                                showModal();
+                            }
+                        } else {
+                            // fallback: open modal directly if row not found
+                            $('#ModalUpdate' + modalId).modal('show');
+                        }
+                    });
+                </script>
             @endif
         });
     </script>

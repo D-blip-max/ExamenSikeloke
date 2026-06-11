@@ -174,6 +174,8 @@ use App\Http\Controllers\ReporteController;
 
 Route::prefix('admin/reportes')->group(function () {
     Route::get('/', [ReporteController::class, 'index'])->name('admin.reportes.index')->middleware('auth','can:admin.reportes.index');
+    Route::get('voz', [ReporteController::class, 'voz'])->name('admin.reportes.voz')->middleware('auth','can:admin.reportes.index');
+    Route::post('voz/consultar', [ReporteController::class, 'consultarVoz'])->name('admin.reportes.voz.consultar')->middleware('auth','can:admin.reportes.index');
     Route::get('generar/datos_tabla', [ReporteController::class, 'datosTabla'])->name('admin.reportes.datos_tabla')->middleware('auth','can:admin.reportes.tabla');
     Route::get('generar/{tipo}', [ReporteController::class, 'generar'])->name('admin.reportes.generar')->middleware('auth','can:admin.reportes.index');
     Route::get('export/{tipo}', [ReporteController::class, 'export'])->name('admin.reportes.export')->middleware('auth','can:admin.reportes.index');

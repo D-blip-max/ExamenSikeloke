@@ -100,8 +100,7 @@ class AsignacionController extends Controller
         });
 
         if ($validator->fails()) {
-            return redirect()
-                ->back()
+            return redirect()->route('admin.asignaciones.index')
                 ->withErrors($validator)
                 ->withInput()
                 ->with('modal_id', $id);

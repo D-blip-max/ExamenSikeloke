@@ -18,6 +18,7 @@
                 <a href="{{ url('admin/reportes/generar/reprobados') }}" class="list-group-item list-group-item-action">Postulantes reprobados (&lt;60)</a>
                 <a href="{{ url('admin/reportes/generar/promedios') }}" class="list-group-item list-group-item-action">Promedios generales</a>
                 <a href="{{ url('admin/reportes/generar/cantidad_grupos') }}" class="list-group-item list-group-item-action">Cantidad de grupos habilitados</a>
+                <a href="{{ url('admin/reportes/voz') }}" class="list-group-item list-group-item-action">Consulta por voz</a>
                 <a href="{{ url('admin/reportes/generar/estadisticas_materia') }}" class="list-group-item list-group-item-action">Estadísticas por materia</a>
                 <a href="{{ url('admin/reportes/generar/docentes_por_grupos') }}" class="list-group-item list-group-item-action">Docentes por grupos</a>
                 <a href="{{ url('admin/reportes/generar/grupos_mejor_rendimiento') }}" class="list-group-item list-group-item-action">Grupos con mayor cantidad de aprobados</a>
